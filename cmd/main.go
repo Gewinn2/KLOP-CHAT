@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-
 	database.NewDB()
 
 	r := gin.Default()
@@ -18,7 +17,7 @@ func main() {
 	r.Use(pkg.CORSMiddleware())
 
 	r.POST("/sign-up", internal.HandleSignUp)
-	r.POST("/sign-in", internal.HandleSignIn)
+	r.POST("/", internal.HandleSignIn)
 
 	err := r.Run(":80")
 	if err != nil {
