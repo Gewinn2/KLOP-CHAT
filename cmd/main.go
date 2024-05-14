@@ -2,12 +2,17 @@ package main
 
 import (
 	"Astra_Linux_chat/internal"
+	"Astra_Linux_chat/internal/database"
 	"Astra_Linux_chat/pkg"
-	"github.com/gin-gonic/gin"
 	"log"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
+
+	database.NewDB()
+
 	r := gin.Default()
 
 	r.Use(pkg.CORSMiddleware())
