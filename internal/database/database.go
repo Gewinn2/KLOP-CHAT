@@ -1,7 +1,7 @@
 package database
 
 import (
-	AstraLinux_TCPChat_hackathon "Astra_Linux_chat"
+	"Astra_Linux_chat/config"
 	"database/sql"
 	"log"
 
@@ -9,7 +9,7 @@ import (
 )
 
 func NewDB() {
-	db, err := sql.Open("postgres", AstraLinux_TCPChat_hackathon.ConnStr)
+	db, err := sql.Open("postgres", config.ConnStr)
 	if err != nil {
 		log.Fatal(err)
 	}

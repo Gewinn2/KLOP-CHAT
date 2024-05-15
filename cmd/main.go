@@ -17,7 +17,7 @@ func main() {
 	r.Use(pkg.CORSMiddleware())
 
 	r.POST("/sign-up", internal.HandleSignUp)
-	r.POST("/", internal.HandleSignIn)
+	r.GET("/", internal.HandleSignIn)
 
 	err := r.Run(":80")
 	if err != nil {

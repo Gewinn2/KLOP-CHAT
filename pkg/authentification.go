@@ -1,7 +1,7 @@
 package pkg
 
 import (
-	AstraLinux_TCPChat_hackathon "Astra_Linux_chat"
+	"Astra_Linux_chat/config"
 	"errors"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -58,7 +58,7 @@ func GenerateJWT(id int) (string, error) {
 	// Создание токена с параметрами записанными в claims и id пользователя
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	return token.SignedString([]byte(AstraLinux_TCPChat_hackathon.SigningKey))
+	return token.SignedString([]byte(config.SigningKey))
 }
 
 // Парсинг токена и получение id пользователя
@@ -69,7 +69,7 @@ func ParseToken(tokenstring string) (int, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid signing method")
 		}
-		return []byte(AstraLinux_TCPChat_hackathon.SigningKey), nil
+		return []byte(config.SigningKey), nil
 	})
 
 	if err != nil {
