@@ -22,9 +22,9 @@ func NewDB() *sql.DB {
 	// Создание таблицы пользователей
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS users (
 		user_id SERIAL PRIMARY KEY NOT NULL,
-		name VARCHAR(50) NOT NULL,
+		username VARCHAR(50) NOT NULL,
     	email varchar(100) NOT NULL,
-    	password VARCHAR(30) NOT NULL,
+    	password VARCHAR(256) NOT NULL,
     	photo TEXT,
     	created_at TIMESTAMP
 	);`)

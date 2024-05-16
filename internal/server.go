@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"Astra_Linux_chat/pkg"
 	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -24,6 +25,8 @@ func NewServer(port int, db *sql.DB) (*Server, error) {
 
 func (s *Server) Start() error {
 	router := gin.Default()
+
+	router.Use(pkg.CORSMiddleware())
 
 	router.GET("/", s.hello)
 
