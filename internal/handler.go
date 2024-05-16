@@ -87,3 +87,41 @@ func (s *Server) handleConnection(conn net.Conn) { // обработка сое�
 		conn.Write([]byte(response + "\n")) // высылается отчетное сообщение
 	}
 }
+
+func (s *Server) handleCreateChatRequest(conn net.Conn, request string) {
+	parts := strings.SplitN(request, " ", 3)
+	if len(parts) < 3 {
+		fmt.Println("Invalid request format")
+		return
+	}
+
+	method := parts[0]
+	path := parts[1]
+	body := strings.TrimSpace(parts[2])
+
+	if method != "POST" || path != "/chats" {
+		fmt.Println("Invalid request")
+		return
+	}
+
+	var chatRequest struct {
+		UserId1 int `json:"user_id_1"`
+		UserId2 int `json:"user_id_2"`
+	}
+
+	err := json.Unmarshal([]byte(body), &chatRequest)
+	if err != nil {
+		fmt.Println("Error parsing chat request")
+		return
+	}
+
+	chatId, err := s.createChat(chatRequest.UserId1, chatRequest.UserId2)
+	if err != nil {
+		fmt.Println("Error creating chat")
+		return
+	}
+
+	response := fmt.Sprintf("Chat created with id %d", chatId)
+	conn.Write([]byte(response + "\n"))
+}
+
