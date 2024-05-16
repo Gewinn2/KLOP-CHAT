@@ -23,4 +23,14 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	server, err := NewServer(8080)
+	if err != nil {
+		fmt.Println("Error creating server:", err)
+		return
+	}
+	err = server.Start()
+	if err != nil {
+		fmt.Println("Error starting server:", err)
+		return
+	}
 }
