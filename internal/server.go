@@ -97,15 +97,4 @@ func (s *Server) getMessage(c *gin.Context) { // получаем сообщен
 	c.JSON(http.StatusOK, message)
 }
 
-func createServer() {
-	server, err := NewServer(8080)
-	if err != nil {
-		fmt.Println("Error creating server:", err)
-		return
-	}
-	err = server.Start()
-	if err != nil {
-		fmt.Println("Error starting server:", err)
-		return
-	}
-}
+
