@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"Astra_Linux_chat/internal/database"
 	"encoding/json"
 	"fmt"
 	"net"
@@ -37,7 +38,7 @@ func (s *Server) handleConnection(conn net.Conn) { // обработка сое�
 		case "POST":
 			switch path {
 			case "/users": // запрос аутентификации (добавления пользователя)
-				var user User
+				var user database.User
 				err := json.Unmarshal([]byte(body), &user)
 				if err != nil {
 					response = "Error parsing user data"
@@ -49,7 +50,7 @@ func (s *Server) handleConnection(conn net.Conn) { // обработка сое�
 				response = "User created"
 
 			case "/messages": // запрос отправки сообщения
-				var message Message
+				var message database.Message
 				err := json.Unmarshal([]byte(body), &message)
 				if err != nil {
 					response = "Error parsing message data"
