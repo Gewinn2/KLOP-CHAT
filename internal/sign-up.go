@@ -18,7 +18,7 @@ func (s *Server) HandleSignUp(c *gin.Context) {
 
 	user.CreatedAt = time.Now().Format("2006-01-02")
 
-	_, err := database.UserCheck(s.DB, user.UserName)
+	_, err := database.GetUserIdByUsername(s.DB, user.UserName)
 	if err == nil {
 		c.JSON(http.StatusBadRequest, "Пользователь с таким username уже существует")
 		return

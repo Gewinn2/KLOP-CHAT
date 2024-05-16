@@ -18,15 +18,17 @@ func (s *Server) HandleSignIn(c *gin.Context) {
 	}
 
 	// искать юзера в по имейлу (отсылвает на функцию бд)
-	foundUser := findUserByEmail(user.Email)
-	if foundUser == nil {
+	foundUser, err := database.GetUserByEmail(s.DB, user.Email)
+	if err != nil {
+		fmt.Println("HandleSignIn: ", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email or password"})
 		return
 	}
 
 	// сравнить пароли на соответствие
-	err := bcrypt.CompareHashAndPassword([]byte(foundUser.Password), []byte(user.Password))
+	err = bcrypt.CompareHashAndPassword([]byte(foundUser.Password), []byte(user.Password))
 	if err != nil {
+		fmt.Println("HandleSignIn: ", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email or password"})
 		return
 	}
@@ -34,6 +36,7 @@ func (s *Server) HandleSignIn(c *gin.Context) {
 	// генерируем jwt токен
 	token, err := pkg.GenerateJWT(foundUser.Id)
 	if err != nil {
+		fmt.Println("HandleSignIn: ", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -42,12 +45,4 @@ func (s *Server) HandleSignIn(c *gin.Context) {
 	c.Header("Authorization", fmt.Sprintf("Bearer %s", token))
 
 	c.JSON(http.StatusOK, foundUser)
-}
-
-// Плюс наверное эту функцию надо в бд пихнуть
-// TODO: искать пользователя в бд по имейлу
-func findUserByEmail(email string) *database.User {
-	// TODO: искать пользователя в бд по имейлу
-	return nil
-
 }
