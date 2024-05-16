@@ -17,7 +17,8 @@ func (s *Server) createMessage(c *gin.Context) { // создаем сообще�
 }
 
 func (s *Server) getMessage(c *gin.Context) { // получаем сообщение по айди
-	id := c.Param("id")
+	idStr := c.Param("id")
+	id, _ := strconv.Atoi(idStr)
 	// TODO: достаем сообщение из бд
 	message := database.Message{
 		Id:        id,
