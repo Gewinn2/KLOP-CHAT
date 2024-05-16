@@ -22,7 +22,7 @@ func (s *Server) getMessage(c *gin.Context) { // получаем сообщен
 	id, _ := strconv.Atoi(idStr)
 	// TODO: достаем сообщение из бд
 	message := database.Message{
-		Id:        id,
+		MessageId: id,
 		Content:   "Hi",
 		UserId:    5,
 		ChatId:    2,

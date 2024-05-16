@@ -14,7 +14,7 @@ func (s *Server) getUser(c *gin.Context) { // получаем юзера по �
 	// TODO: надо вытаскивать юзера из бд
 
 	user := database.User{
-		Id:        id,
+		UserId:    id,
 		Email:     "user@example.com",
 		Password:  "secret",
 		UserName:  "User",

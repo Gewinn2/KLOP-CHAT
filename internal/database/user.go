@@ -22,7 +22,7 @@ func GetUserIdByUsername(db *sql.DB, username string) (User, error) {
 	var user User
 
 	row := db.QueryRow(`SELECT user_id FROM users WHERE username = $1`, username)
-	err := row.Scan(&user.Id)
+	err := row.Scan(&user.UserId)
 	if err != nil {
 		return user, fmt.Errorf("DBGetUserIdByUsername:", err)
 	}
@@ -34,7 +34,7 @@ func GetUserByEmail(db *sql.DB, email string) (User, error) {
 	var user User
 
 	row := db.QueryRow(`SELECT * FROM users WHERE email = $1`, email)
-	err := row.Scan(&user.Id, &user.Email, &user.Password, &user.UserName, &user.Photo, &user.CreatedAt)
+	err := row.Scan(&user.UserId, &user.Email, &user.Password, &user.UserName, &user.Photo, &user.CreatedAt)
 	if err != nil {
 		return user, fmt.Errorf("DBGetUserByEmail:", err)
 	}
@@ -46,7 +46,7 @@ func GetUserById(db *sql.DB, id int) (User, error) {
 	var user User
 
 	row := db.QueryRow(`SELECT * FROM users WHERE user_id = $1`, id)
-	err := row.Scan(&user.Id, &user.Email, &user.Password, &user.UserName, &user.Photo, &user.CreatedAt)
+	err := row.Scan(&user.UserId, &user.Email, &user.Password, &user.UserName, &user.Photo, &user.CreatedAt)
 	if err != nil {
 		return user, fmt.Errorf("DBGetUserByEmail:", err)
 	}
@@ -62,7 +62,7 @@ func UpdateUserById(db *sql.DB, u User) (User, error) {
 		    email = $2,
 		    password = $3,
 		    photo = $4
-		WHERE user_id = $5`, user.UserName, user.Email, user.Password, user.Photo, user.Id)
+		WHERE user_id = $5`, user.UserName, user.Email, user.Password, user.Photo, user.UserId)
 
 	if err != nil {
 		return user, fmt.Errorf("UpdateUserById:", err)

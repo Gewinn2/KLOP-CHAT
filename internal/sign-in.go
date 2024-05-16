@@ -34,7 +34,7 @@ func (s *Server) HandleSignIn(c *gin.Context) {
 	}
 
 	// генерируем jwt токен
-	token, err := pkg.GenerateJWT(foundUser.Id)
+	token, err := pkg.GenerateJWT(foundUser.UserId)
 	if err != nil {
 		fmt.Println("HandleSignIn: ", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
