@@ -7,8 +7,9 @@ import (
 func (s *Server) createChat(userId1, userId2 int) (int, error) {
 	// Создаем новый чат
 	chat := database.Chat{
-		UserId1:   userId1,
-		UserId2:   userId2,
+		ChatId:    0,
+		Name:      "",
+		Photo:     "",
 		CreatedAt: "2022-01-01T00:00:00Z",
 	}
 
