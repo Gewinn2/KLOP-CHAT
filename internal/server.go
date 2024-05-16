@@ -25,6 +25,8 @@ func NewServer(port int, db *sql.DB) (*Server, error) {
 func (s *Server) Start() error {
 	router := gin.Default()
 
+	router.GET("/", s.hello)
+
 	// Пользователи
 	router.GET("/users/:id", s.getUser)   // получить айди пользователя
 	router.POST("/sign-up", s.createUser) // создание пользователя (запрос для аутентификации)
@@ -50,4 +52,8 @@ func (s *Server) Start() error {
 		}
 		go s.handleConnection(conn)
 	}
+}
+
+func (s *Server) hello(c *gin.Context) {
+	c.JSON(http.StatusOK, "Добро пожаловать в чат Клопов!")
 }
