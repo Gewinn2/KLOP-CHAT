@@ -1,7 +1,7 @@
 package database
 
 type User struct {
-	Id        string `json:"id"`
+	Id        int    `json:"id"`
 	Email     string `json:"email"`
 	Password  string `json:"password"`
 	UserName  string `json:"username"`
@@ -10,7 +10,7 @@ type User struct {
 }
 
 type Message struct {
-	Id        string `json:"message_id"`
+	Id        int    `json:"message_id"`
 	Content   string `json:"content"`
 	UserId    int    `json:"user_id"`
 	ChatId    int    `json:"chat_id"`
