@@ -31,8 +31,15 @@ func (s *Server) Start() error {
 	router.GET("/", s.hello)
 
 	// Пользователи
-	router.GET("/users/:id", s.getUser)   // получить айди пользователя
-	router.POST("/sign-up", s.createUser) // создание пользователя (запрос для аутентификации)
+	router.GET("/users/:id", s.getUser)     // получить айди пользователя
+	router.POST("/sign-up", s.HandleSignUp) // создание пользователя (запрос для регистрации)
+	router.POST("/sign-in", s.HandleSignIn) // создание пользователя (запрос для регистрации)
+
+	authGroup := router.Group("/auth")
+	authGroup.Use(pkg.WithJWTAuth)
+	{
+
+	}
 
 	// Сообщение
 	router.GET("/messages/:id", s.getMessage) // получить айди сообщения

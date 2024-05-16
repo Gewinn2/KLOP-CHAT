@@ -10,7 +10,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func HandleSignIn(c *gin.Context) {
+func (s *Server) HandleSignIn(c *gin.Context) {
 	var user database.User
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -48,6 +48,6 @@ func HandleSignIn(c *gin.Context) {
 // TODO: искать пользователя в бд по имейлу
 func findUserByEmail(email string) *database.User {
 	// TODO: искать пользователя в бд по имейлу
-	return
+	return nil
 
 }

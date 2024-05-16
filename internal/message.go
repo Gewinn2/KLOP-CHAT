@@ -4,6 +4,7 @@ import (
 	"Astra_Linux_chat/internal/database"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 func (s *Server) createMessage(c *gin.Context) { // создаем сообщение
