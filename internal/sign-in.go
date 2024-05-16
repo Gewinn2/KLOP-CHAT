@@ -26,9 +26,9 @@ func (s *Server) HandleSignIn(c *gin.Context) {
 	}
 
 	// сравнить пароли на соответствие
-	err = bcrypt.CompareHashAndPassword([]byte(foundUser.Password), []byte(user.Password))
-	if err != nil {
-		fmt.Println("HandleSignIn: ", err)
+	hashedPassword := []byte(foundUser.Password)
+	plaintextPassword := []byte(user.Password)
+	if !bytes.Equal(hashPassword(plaintextPassword), hashedPassword) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email or password"})
 		return
 	}
@@ -46,3 +46,11 @@ func (s *Server) HandleSignIn(c *gin.Context) {
 
 	c.JSON(http.StatusOK, foundUser)
 }
+
+// функция хеширования пароля
+func hashPassword(plaintextPassword []byte) []byte {
+	hashedPassword, err := bcrypt.GenerateFromPassword(plaintextPassword, bcrypt.DefaultCost)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return hashedPassword
