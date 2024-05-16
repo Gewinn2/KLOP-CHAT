@@ -16,3 +16,9 @@ type Message struct {
 	ChatId    int    `json:"chat_id"`
 	CreatedAt string `json:"createdat"`
 }
+type Chat struct {
+	Id        int       `json:"id"`
+	UserId1   int       `json:"user_id_1"`
+	UserId2   int       `json:"user_id_2"`
+	CreatedAt string    `json:"chat_created_at"`
+}
