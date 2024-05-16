@@ -1,11 +1,12 @@
 package internal
 
 import (
-	"github.com/gin-gonic/gin"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"net"
 	"net/http"
 )
+
 type Server struct {
 	listener net.Listener
 }
@@ -22,8 +23,8 @@ func NewServer(port int) (*Server, error) {
 func (s *Server) Start() error {
 	router := gin.Default()
 
-	router.POST("/users", s.createUser) // создание пользователя (запрос для аутентификации)
-	router.GET("/users/:id", s.getUser) // получить айди пользователя
+	router.POST("/users", s.createUser)       // создание пользователя (запрос для аутентификации)
+	router.GET("/users/:id", s.getUser)       // получить айди пользователя
 	router.POST("/messages", s.createMessage) // псоздать сообщение
 	router.GET("/messages/:id", s.getMessage) // получить айди сообщения
 
@@ -85,7 +86,7 @@ func (s *Server) createMessage(c *gin.Context) { // создаем сообще�
 
 func (s *Server) getMessage(c *gin.Context) { // получаем сообщение по айди
 	id := c.Param("id")
-	// TODO: достаем сообщение из бд 
+	// TODO: достаем сообщение из бд
 	message := Message{
 		Id:        id,
 		Content:   "Hi",

@@ -1,10 +1,10 @@
 package internal
 
 import (
+	"encoding/json"
 	"fmt"
 	"net"
 	"strings"
-	"encoding/json"
 )
 
 func (s *Server) handleConnection(conn net.Conn) { // обработка соединений (они отправляются в слайс buf)
@@ -43,9 +43,9 @@ func (s *Server) handleConnection(conn net.Conn) { // обработка сое�
 					response = "Error parsing user data"
 					break
 				}
-				
-				// TODO: Вот здесь надо сохранять юзера в бд 
-				
+
+				// TODO: Вот здесь надо сохранять юзера в бд
+
 				response = "User created"
 
 			case "/messages": // запрос отправки сообщения
