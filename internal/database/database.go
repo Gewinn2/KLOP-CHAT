@@ -8,7 +8,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func NewDB() {
+func NewDB() *sql.DB {
 	db, err := sql.Open("postgres", config.ConnStr)
 	if err != nil {
 		log.Fatal(err)
@@ -69,4 +69,5 @@ func NewDB() {
 		log.Fatal(err)
 	}
 
+	return db
 }

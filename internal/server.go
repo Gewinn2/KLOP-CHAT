@@ -26,8 +26,8 @@ func (s *Server) Start() error {
 	router := gin.Default()
 
 	// Пользователи
-	router.GET("/users/:id", s.getUser) // получить айди пользователя
-	router.POST("/users", s.createUser) // создание пользователя (запрос для аутентификации)
+	router.GET("/users/:id", s.getUser)   // получить айди пользователя
+	router.POST("/sign-up", s.createUser) // создание пользователя (запрос для аутентификации)
 
 	// Сообщение
 	router.GET("/messages/:id", s.getMessage) // получить айди сообщения

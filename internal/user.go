@@ -17,6 +17,8 @@ func (s *Server) createUser(c *gin.Context) { // создаем юзера
 	err := database.CreateUser(s.DB, user)
 	if err != nil {
 		fmt.Println("createUser:", err)
+		c.JSON(http.StatusInternalServerError, err)
+		return
 	}
 
 	c.JSON(http.StatusCreated, user)
