@@ -25,8 +25,8 @@ func NewDB() {
 		name VARCHAR(50) NOT NULL,
     	email varchar(100) NOT NULL,
     	password VARCHAR(30) NOT NULL,
-    	photo text,
-    	created_at VARCHAR(20)
+    	photo TEXT,
+    	created_at TIMESTAMP
 	);`)
 	if err != nil {
 		log.Fatal(err)
@@ -36,8 +36,8 @@ func NewDB() {
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS chats (
 		chat_id SERIAL PRIMARY KEY NOT NULL,
 		name VARCHAR(50) NOT NULL,
-    	photo text NOT NULL,
-    	created_at VARCHAR(20)
+    	photo TEXT,
+    	created_at TIMESTAMP
 	);`)
 	if err != nil {
 		log.Fatal(err)
@@ -49,7 +49,7 @@ func NewDB() {
 		content text NOT NULL,
     	chat_id INT NOT NULL,
     	user_id INT NOT NULL,
-    	created_at VARCHAR(20),
+    	created_at TIMESTAMP,
     	FOREIGN KEY (user_id) REFERENCES users (user_id),
     	FOREIGN KEY (chat_id) REFERENCES chats (chat_id) ON DELETE CASCADE
 	);`)
