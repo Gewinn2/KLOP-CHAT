@@ -44,7 +44,8 @@ func (s *Server) createUser(c *gin.Context) { // создаем юзера
 }
 
 func (s *Server) getUser(c *gin.Context) { // получаем юзера по айди
-	id := c.Param("id")
+	idStr := c.Param("id")
+	id,_ := strconv.Atoi(idStr)
 
 	// TODO: надо вытаскивать юзера из бд
 
