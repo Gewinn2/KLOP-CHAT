@@ -8,7 +8,7 @@ import (
 func CreateChat(db *sql.DB, chat Chat, userId1, userId2 int) (Chat, error) {
 	var chatID int
 
-	err := db.QueryRow(`INSERT INTO chat(name, photo, created_at)
+	err := db.QueryRow(`INSERT INTO chats(name, photo, created_at)
 		VALUES ($1, $2, $3)
 		RETURNING chat_id`, chat.Name, chat.Photo, chat.CreatedAt).Scan(&chatID)
 	if err != nil {
@@ -31,7 +31,7 @@ func CreateChat(db *sql.DB, chat Chat, userId1, userId2 int) (Chat, error) {
 }
 
 func UpdateChatById(db *sql.DB, chat Chat) (Chat, error) {
-	_, err := db.Exec(`UPDATE chat 
+	_, err := db.Exec(`UPDATE chats 
 		SET name = $1, photo = $2 
 		WHERE chat_id = $3`, chat.Name, chat.Photo, chat.ChatId)
 	if err != nil {
@@ -42,7 +42,7 @@ func UpdateChatById(db *sql.DB, chat Chat) (Chat, error) {
 }
 
 func DeleteChatById(db *sql.DB, id int) error {
-	_, err := db.Exec(`DELETE chat WHERE chat_id = $1`, id)
+	_, err := db.Exec(`DELETE FROM chats WHERE chat_id = $1`, id)
 	if err != nil {
 		return fmt.Errorf("DBDeleteChatById:", err)
 	}
