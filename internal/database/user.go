@@ -54,9 +54,7 @@ func GetUserById(db *sql.DB, id int) (User, error) {
 	return user, nil
 }
 
-func UpdateUserById(db *sql.DB, u User) (User, error) {
-	var user User
-
+func UpdateUserById(db *sql.DB, user User) (User, error) {
 	_, err := db.Exec(`UPDATE users 
 		SET username = $1, 
 		    email = $2,

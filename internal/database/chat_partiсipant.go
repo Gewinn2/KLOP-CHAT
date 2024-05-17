@@ -6,7 +6,7 @@ import (
 )
 
 func AddChatParticipant(db *sql.DB, chatId, userID int) error {
-	_, err := db.Exec(`INSERT INTO chats_partiсipants(chat_id, user_id)
+	_, err := db.Exec(`INSERT INTO chats_participants(chat_id, user_id)
 		VALUES ($1, $2)`, chatId, userID)
 	if err != nil {
 		return fmt.Errorf("DBAddChatParticipant:", err)
@@ -14,20 +14,32 @@ func AddChatParticipant(db *sql.DB, chatId, userID int) error {
 	return nil
 }
 
-func GetChatParticipantsByChatId(db *sql.DB, chatId int) (ChatParticipant, error) {
-	var chatParticipant ChatParticipant
+func GetChatParticipantsByChatId(db *sql.DB, chatId int) ([]ChatParticipant, error) {
+	var participants []ChatParticipant
 
-	row := db.QueryRow(`SELECT * FROM chats_partiсipants WHERE chat_id = $1`, chatId)
-	err := row.Scan(&chatParticipant.ParticipantId, &chatParticipant.ChatId, &chatParticipant.UserId)
+	rows, err := db.Query(`SELECT * FROM chats_participants WHERE chat_id = $1`, chatId)
 	if err != nil {
-		return chatParticipant, fmt.Errorf("DBGetChatsParticipantsByChatId:", err)
+		return participants, fmt.Errorf("DBGetChatParticipantsByChatId: %w", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var participant ChatParticipant
+		if err := rows.Scan(&participant.ParticipantId, &participant.ChatId, &participant.UserId); err != nil {
+			return participants, fmt.Errorf("DBGetChatParticipantsByChatId: ", err)
+		}
+		participants = append(participants, participant)
 	}
 
-	return chatParticipant, nil
+	if err = rows.Err(); err != nil {
+		return participants, fmt.Errorf("DBGetChatParticipantsByChatId: ", err)
+	}
+
+	return participants, nil
 }
 
 func DeleteChatParticipant(db *sql.DB, chatId, userID int) error {
-	_, err := db.Exec(`DELETE FROM chats_partiсipants WHERE chat_id = $1 AND user_id = $2`, chatId, userID)
+	_, err := db.Exec(`DELETE FROM chats_participants WHERE chat_id = $1 AND user_id = $2`, chatId, userID)
 	if err != nil {
 		return fmt.Errorf("DBDeleteChatParticipant:", err)
 	}
