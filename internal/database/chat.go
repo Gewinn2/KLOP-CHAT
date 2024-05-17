@@ -31,9 +31,21 @@ func CreateChat(db *sql.DB, chat Chat, userId1, userId2 int) (Chat, error) {
 }
 
 func UpdateChatById(db *sql.DB, chat Chat) (Chat, error) {
+	_, err := db.Exec(`UPDATE chat 
+		SET name = $1, photo = $2 
+		WHERE chat_id = $3`, chat.Name, chat.Photo, chat.ChatId)
+	if err != nil {
+		return chat, fmt.Errorf("DBUpdateChatById:", err)
+	}
+
 	return chat, nil
 }
 
-func DeleteChatById(db *sql.DB) error {
+func DeleteChatById(db *sql.DB, id int) error {
+	_, err := db.Exec(`DELETE chat WHERE chat_id = $1`, id)
+	if err != nil {
+		return fmt.Errorf("DBDeleteChatById:", err)
+	}
+
 	return nil
 }
