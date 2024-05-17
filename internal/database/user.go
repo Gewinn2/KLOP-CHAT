@@ -34,7 +34,7 @@ func GetUserByEmail(db *sql.DB, email string) (User, error) {
 	var user User
 
 	row := db.QueryRow(`SELECT * FROM users WHERE email = $1`, email)
-	err := row.Scan(&user.UserId, &user.Email, &user.Password, &user.UserName, &user.Photo, &user.CreatedAt)
+	err := row.Scan(&user.UserId, &user.UserName, &user.Email, &user.Password, &user.Photo, &user.CreatedAt)
 	if err != nil {
 		return user, fmt.Errorf("DBGetUserByEmail:", err)
 	}
@@ -46,7 +46,7 @@ func GetUserById(db *sql.DB, id int) (User, error) {
 	var user User
 
 	row := db.QueryRow(`SELECT * FROM users WHERE user_id = $1`, id)
-	err := row.Scan(&user.UserId, &user.Email, &user.Password, &user.UserName, &user.Photo, &user.CreatedAt)
+	err := row.Scan(&user.UserId, &user.UserName, &user.Email, &user.Password, &user.Photo, &user.CreatedAt)
 	if err != nil {
 		return user, fmt.Errorf("DBGetUserByEmail:", err)
 	}
