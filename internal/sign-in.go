@@ -28,7 +28,8 @@ func (s *Server) HandleSignIn(c *gin.Context) {
 	// сравнить пароли на соответствие
 	hashedPassword := []byte(foundUser.Password)
 	plaintextPassword := []byte(user.Password)
-	if !bytes.Equal(hashPassword(plaintextPassword), hashedPassword) {
+	if err = bcrypt.CompareHashAndPassword(hashedPassword, plaintextPassword); err != nil {
+		fmt.Println("HandleSignIn: ", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email or password"})
 		return
 	}
@@ -44,13 +45,5 @@ func (s *Server) HandleSignIn(c *gin.Context) {
 	// присваиваем Jwt токен
 	c.Header("Authorization", fmt.Sprintf("Bearer %s", token))
 
-	c.JSON(http.StatusOK, foundUser)
+	c.JSON(http.StatusOK, "Authentication was successful")
 }
-
-// функция хеширования пароля
-func hashPassword(plaintextPassword []byte) []byte {
-	hashedPassword, err := bcrypt.GenerateFromPassword(plaintextPassword, bcrypt.DefaultCost)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return hashedPassword

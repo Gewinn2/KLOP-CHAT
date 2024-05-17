@@ -20,7 +20,13 @@ func (s *Server) HandleSignUp(c *gin.Context) {
 
 	_, err := database.GetUserIdByUsername(s.DB, user.UserName)
 	if err == nil {
-		c.JSON(http.StatusBadRequest, "Пользователь с таким username уже существует")
+		c.JSON(http.StatusBadRequest, "A user with this username already exists")
+		return
+	}
+
+	_, err = database.GetUserByEmail(s.DB, user.Email)
+	if err == nil {
+		c.JSON(http.StatusBadRequest, "A user with this email already exists")
 		return
 	}
 
