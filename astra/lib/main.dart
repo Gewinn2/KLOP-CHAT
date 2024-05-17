@@ -1,4 +1,5 @@
 import 'package:astra/features/authorization/authorization.dart';
+import 'package:astra/features/authorization/registration.dart';
 import 'package:astra/features/chats/main_screen_chats.dart';
 import 'package:astra/theme/them.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       //initialRoute: firstLaunch ? 'welcome' : '/',
       routes: {
         '/': (context) => const Authorization(),
+        'registration': (context) => const Registration(),
         'main_screen_chat': (context) => const MainChatScreen(),
       },
       onUnknownRoute: (settings) {},

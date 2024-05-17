@@ -14,6 +14,7 @@ class _AuthorizationState extends State<Authorization> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(   
+        //automaticallyImplyLeading: false, 
         title: const Text(
           "Klop Chat",
           style: TextStyle( 
@@ -110,7 +111,11 @@ class _AuthorizationState extends State<Authorization> {
                       SizedBox(height: 20,),
                       ElevatedButton(
                       onPressed: () {
-                        // Действия при нажатии на кнопку
+                        Navigator.pushNamed(
+                            context,
+                            'registration',
+                            //arguments: data, // Здесь вы передаете данные, которые хотите передать на `ChatsGroupList()`
+                          );
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(59, 3, 102, 1)), // Фоновый цвет кнопки
