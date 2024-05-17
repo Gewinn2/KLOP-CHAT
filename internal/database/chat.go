@@ -15,19 +15,51 @@ func CreateChat(db *sql.DB, chat Chat, userId1, userId2 int) (Chat, error) {
 		return chat, fmt.Errorf("DBCreateChat:", err)
 	}
 
-	_, err = db.Exec(`INSERT INTO chats_partiсipants (chat_id, user_id)
+	_, err = db.Exec(`INSERT INTO chats_participants (chat_id, user_id)
 		VALUES ($1, $2)`, chatID, userId1)
 	if err != nil {
 		return chat, fmt.Errorf("DBCreateChat:", err)
 	}
 
-	_, err = db.Exec(`INSERT INTO chats_partiсipants (chat_id, user_id)
+	_, err = db.Exec(`INSERT INTO chats_participants (chat_id, user_id)
 		VALUES ($1, $2)`, chatID, userId2)
 	if err != nil {
 		return chat, fmt.Errorf("DBCreateChat:", err)
 	}
 
 	return chat, nil
+}
+
+func GetAllChatByUserId(db *sql.DB, userId int) ([]Chat, error) {
+	var chatArr []Chat
+
+	var chatIdArr []int
+	rows, err := db.Query(`SELECT chat_id FROM chats_participants WHERE user_id = $1`, userId)
+	if err != nil {
+		return chatArr, fmt.Errorf("DBGetAllChatByUserId:", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var chatParticipant ChatParticipant
+		err = rows.Scan(&chatParticipant.ChatId)
+		if err != nil {
+			return chatArr, fmt.Errorf("DBGetAllChatByUserId:", err)
+		}
+		chatIdArr = append(chatIdArr, chatParticipant.ChatId)
+	}
+
+	for i := range chatIdArr {
+		var chat Chat
+		row := db.QueryRow(`SELECT * FROM chats WHERE chat_id = $1`, chatIdArr[i])
+		err = row.Scan(&chat.ChatId, &chat.Name, &chat.Photo, &chat.CreatedAt)
+		if err != nil {
+			return chatArr, fmt.Errorf("DBGetAllChatByUserId:", err)
+		}
+		chatArr = append(chatArr, chat)
+	}
+
+	return chatArr, nil
 }
 
 func UpdateChatById(db *sql.DB, chat Chat) (Chat, error) {
