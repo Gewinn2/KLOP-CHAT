@@ -1,0 +1,130 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "IQJ",
+    "version": "v1",
+    "contact": {
+      "name": "IQJ API",
+      "url": "https://mireaiqj.ru"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "paths": {
+    "/sign-up":{
+      "post": {
+        "tags": [
+          "USER"
+        ],
+        "summary": "Регистрация",
+        "operationId": "UserRegistration",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses":{
+          "200": {
+            "description": "Регистрация прошла успешно",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sign-in":{
+      "post": {
+        "tags": [
+          "USER"
+        ],
+        "summary": "Aутентификация",
+        "operationId": "UserAuthentification",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserAuth"
+              }
+            }
+          }
+        },
+        "responses":{
+          "200": {
+            "description": "Регистрация прошла успешно",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAuth"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "AdminAuth": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "vanek"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "ivanovivan@yandex.ru"
+          },
+          "password": {
+            "type": "string",
+            "example": "qwerty1234"
+          },
+          "photo": {
+            "type": "string",
+            "example": "https://gas-kvas.com/grafic/uploads/posts/2023-09/1695826313_gas-kvas-com-p-kartinki-s-kotikami-1.jpg"
+          }
+        }
+      },
+      "UserAuth": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "ivanovivan@yandex.ru"
+          },
+          "password": {
+            "type": "string",
+            "example": "qwerty1234"
+          }
+        }
+      },
+      "JWT": {
+        "type": "string",
+        "example": "nqhbdqLKVWLBlbaddwvad.advIdwkvdkavdvauvdw.davgjdvadvamddmvgad"
+      }
+    }
+  }
+}
+
