@@ -9,7 +9,7 @@ func AddChatParticipant(db *sql.DB, chatId, userID int) error {
 	_, err := db.Exec(`INSERT INTO chats_participants(chat_id, user_id)
 		VALUES ($1, $2)`, chatId, userID)
 	if err != nil {
-		return fmt.Errorf("DBAddChatParticipant:", err)
+		return fmt.Errorf("DBAddChatParticipant: %w", err)
 	}
 	return nil
 }
@@ -26,13 +26,13 @@ func GetChatParticipantsByChatId(db *sql.DB, chatId int) ([]ChatParticipant, err
 	for rows.Next() {
 		var participant ChatParticipant
 		if err := rows.Scan(&participant.ParticipantId, &participant.ChatId, &participant.UserId); err != nil {
-			return participants, fmt.Errorf("DBGetChatParticipantsByChatId: ", err)
+			return participants, fmt.Errorf("DBGetChatParticipantsByChatId: %w", err)
 		}
 		participants = append(participants, participant)
 	}
 
 	if err = rows.Err(); err != nil {
-		return participants, fmt.Errorf("DBGetChatParticipantsByChatId: ", err)
+		return participants, fmt.Errorf("DBGetChatParticipantsByChatId: %w", err)
 	}
 
 	return participants, nil
@@ -41,7 +41,7 @@ func GetChatParticipantsByChatId(db *sql.DB, chatId int) ([]ChatParticipant, err
 func DeleteChatParticipant(db *sql.DB, chatId, userID int) error {
 	_, err := db.Exec(`DELETE FROM chats_participants WHERE chat_id = $1 AND user_id = $2`, chatId, userID)
 	if err != nil {
-		return fmt.Errorf("DBDeleteChatParticipant:", err)
+		return fmt.Errorf("DBDeleteChatParticipant: %w", err)
 	}
 	return nil
 }

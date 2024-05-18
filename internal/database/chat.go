@@ -12,19 +12,19 @@ func CreateChat(db *sql.DB, chat Chat, userId1, userId2 int) (Chat, error) {
 		VALUES ($1, $2, $3)
 		RETURNING chat_id`, chat.Name, chat.Photo, chat.CreatedAt).Scan(&chatID)
 	if err != nil {
-		return chat, fmt.Errorf("DBCreateChat:", err)
+		return chat, fmt.Errorf("DBCreateChat: %w", err)
 	}
 
 	_, err = db.Exec(`INSERT INTO chats_participants (chat_id, user_id)
 		VALUES ($1, $2)`, chatID, userId1)
 	if err != nil {
-		return chat, fmt.Errorf("DBCreateChat:", err)
+		return chat, fmt.Errorf("DBCreateChat: %w", err)
 	}
 
 	_, err = db.Exec(`INSERT INTO chats_participants (chat_id, user_id)
 		VALUES ($1, $2)`, chatID, userId2)
 	if err != nil {
-		return chat, fmt.Errorf("DBCreateChat:", err)
+		return chat, fmt.Errorf("DBCreateChat: %w", err)
 	}
 
 	return chat, nil
@@ -36,7 +36,7 @@ func GetAllChatByUserId(db *sql.DB, userId int) ([]Chat, error) {
 	var chatIdArr []int
 	rows, err := db.Query(`SELECT chat_id FROM chats_participants WHERE user_id = $1`, userId)
 	if err != nil {
-		return chatArr, fmt.Errorf("DBGetAllChatByUserId:", err)
+		return chatArr, fmt.Errorf("DBGetAllChatByUserId: %w", err)
 	}
 	defer rows.Close()
 
@@ -44,7 +44,7 @@ func GetAllChatByUserId(db *sql.DB, userId int) ([]Chat, error) {
 		var chatParticipant ChatParticipant
 		err = rows.Scan(&chatParticipant.ChatId)
 		if err != nil {
-			return chatArr, fmt.Errorf("DBGetAllChatByUserId:", err)
+			return chatArr, fmt.Errorf("DBGetAllChatByUserId: %w", err)
 		}
 		chatIdArr = append(chatIdArr, chatParticipant.ChatId)
 	}
@@ -54,7 +54,7 @@ func GetAllChatByUserId(db *sql.DB, userId int) ([]Chat, error) {
 		row := db.QueryRow(`SELECT * FROM chats WHERE chat_id = $1`, chatIdArr[i])
 		err = row.Scan(&chat.ChatId, &chat.Name, &chat.Photo, &chat.CreatedAt)
 		if err != nil {
-			return chatArr, fmt.Errorf("DBGetAllChatByUserId:", err)
+			return chatArr, fmt.Errorf("DBGetAllChatByUserId: %w", err)
 		}
 		chatArr = append(chatArr, chat)
 	}
@@ -67,7 +67,7 @@ func UpdateChatById(db *sql.DB, chat Chat) (Chat, error) {
 		SET name = $1, photo = $2 
 		WHERE chat_id = $3`, chat.Name, chat.Photo, chat.ChatId)
 	if err != nil {
-		return chat, fmt.Errorf("DBUpdateChatById:", err)
+		return chat, fmt.Errorf("DBUpdateChatById: %w", err)
 	}
 
 	return chat, nil
@@ -76,7 +76,7 @@ func UpdateChatById(db *sql.DB, chat Chat) (Chat, error) {
 func DeleteChatById(db *sql.DB, id int) error {
 	_, err := db.Exec(`DELETE FROM chats WHERE chat_id = $1`, id)
 	if err != nil {
-		return fmt.Errorf("DBDeleteChatById:", err)
+		return fmt.Errorf("DBDeleteChatById: %w", err)
 	}
 
 	return nil
