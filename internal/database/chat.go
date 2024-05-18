@@ -5,31 +5,24 @@ import (
 	"fmt"
 )
 
-func CreateChat(db *sql.DB, chat Chat, userId1, userId2 int) (Chat, error) {
-	var chatID int
+// CreateChat создает новый чат
+// Принимает структуру Chat
+// Возвращает id нового чата
+func CreateChat(db *sql.DB, chat Chat) (int, error) {
+	var chatId int
 
 	err := db.QueryRow(`INSERT INTO chats(name, photo, created_at)
 		VALUES ($1, $2, $3)
-		RETURNING chat_id`, chat.Name, chat.Photo, chat.CreatedAt).Scan(&chatID)
+		RETURNING chat_id`, chat.Name, chat.Photo, chat.CreatedAt).Scan(&chatId)
 	if err != nil {
-		return chat, fmt.Errorf("DBCreateChat: %w", err)
+		return 0, fmt.Errorf("DBCreateChat: %w", err)
 	}
 
-	_, err = db.Exec(`INSERT INTO chats_participants (chat_id, user_id)
-		VALUES ($1, $2)`, chatID, userId1)
-	if err != nil {
-		return chat, fmt.Errorf("DBCreateChat: %w", err)
-	}
-
-	_, err = db.Exec(`INSERT INTO chats_participants (chat_id, user_id)
-		VALUES ($1, $2)`, chatID, userId2)
-	if err != nil {
-		return chat, fmt.Errorf("DBCreateChat: %w", err)
-	}
-
-	return chat, nil
+	return chatId, nil
 }
 
+// GetAllChatByUserId возвращает все чаты пользователя
+// Принимает user_id и возвращает массив чатов, в которых участвует этот пользователь
 func GetAllChatByUserId(db *sql.DB, userId int) ([]Chat, error) {
 	var chatArr []Chat
 
@@ -62,6 +55,9 @@ func GetAllChatByUserId(db *sql.DB, userId int) ([]Chat, error) {
 	return chatArr, nil
 }
 
+// UpdateChatById изменяет данные чата
+// Принимает структуру Chat с обновленными данными чата и идентификатором чата
+// Возвращает обновленную структуру Chat
 func UpdateChatById(db *sql.DB, chat Chat) (Chat, error) {
 	_, err := db.Exec(`UPDATE chats 
 		SET name = $1, photo = $2 
@@ -73,6 +69,8 @@ func UpdateChatById(db *sql.DB, chat Chat) (Chat, error) {
 	return chat, nil
 }
 
+// DeleteChatById удаляет чат по его идентификатору
+// Принимает chat_id и удаляет чат с этим id
 func DeleteChatById(db *sql.DB, id int) error {
 	_, err := db.Exec(`DELETE FROM chats WHERE chat_id = $1`, id)
 	if err != nil {

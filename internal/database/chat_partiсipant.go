@@ -5,15 +5,21 @@ import (
 	"fmt"
 )
 
-func AddChatParticipant(db *sql.DB, chatId, userID int) error {
-	_, err := db.Exec(`INSERT INTO chats_participants(chat_id, user_id)
-		VALUES ($1, $2)`, chatId, userID)
+// AddChatParticipant добавляет участника в чат
+// Принимает chat_id и user_id, создает новую запись в таблице chats_participants и возвращает participants_id новой записи
+func AddChatParticipant(db *sql.DB, chatId, userID int) (int, error) {
+	var participantsId int
+	err := db.QueryRow(`INSERT INTO chats_participants(chat_id, user_id)
+		VALUES ($1, $2)
+		RETURNING participants_id`, chatId, userID).Scan(&participantsId)
 	if err != nil {
-		return fmt.Errorf("DBAddChatParticipant: %w", err)
+		return 0, fmt.Errorf("DBAddChatParticipant: %w", err)
 	}
-	return nil
+	return participantsId, nil
 }
 
+// GetChatParticipantsByChatId возвращает всех участников чата
+// Принимает chat_id и возвращает массив участников этого чата
 func GetChatParticipantsByChatId(db *sql.DB, chatId int) ([]ChatParticipant, error) {
 	var participants []ChatParticipant
 
@@ -38,8 +44,10 @@ func GetChatParticipantsByChatId(db *sql.DB, chatId int) ([]ChatParticipant, err
 	return participants, nil
 }
 
-func DeleteChatParticipant(db *sql.DB, chatId, userID int) error {
-	_, err := db.Exec(`DELETE FROM chats_participants WHERE chat_id = $1 AND user_id = $2`, chatId, userID)
+// DeleteChatParticipant удаляет участника чата по его id
+// Принимает participants_id и удаляет запись с этим id из таблицы chats_participants
+func DeleteChatParticipant(db *sql.DB, participantsId int) error {
+	_, err := db.Exec(`DELETE FROM chats_participants WHERE participants_id = $1`, participantsId)
 	if err != nil {
 		return fmt.Errorf("DBDeleteChatParticipant: %w", err)
 	}
