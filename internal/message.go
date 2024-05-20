@@ -60,6 +60,8 @@ func (s *Server) getAllChatsMessages(c *gin.Context) { // получаем со�
 	c.JSON(http.StatusOK, AllChatsMessages)
 }
 
+func (s *Server) getLatestMessage(c *gin.Context) {}
+
 func (s *Server) updateMessage(c *gin.Context) {
 
 }
