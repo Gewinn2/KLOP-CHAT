@@ -40,13 +40,15 @@ func (s *Server) Start() error {
 	{
 		authGroup.GET("chat", s.getAllUsersChats)
 		authGroup.POST("chat", s.createChat)
-		authGroup.PUT("chat", s.createChat)    // TODO: сделать функцию
-		authGroup.DELETE("chat", s.createChat) // TODO: сделать функцию
-	}
+		authGroup.PUT("chat", s.updateChat)    // TODO: сделать функцию
+		authGroup.DELETE("chat", s.deleteChat) // TODO: сделать функцию
 
-	// Сообщение
-	router.GET("/messages/:id", s.getMessage) // получить айди сообщения
-	router.POST("/messages", s.createMessage) // псоздать сообщение
+		authGroup.GET("message", s.getAllChatsMessages)
+		authGroup.POST("message", s.createMessage)
+		authGroup.PUT("message", s.updateChat)    // TODO: сделать функцию
+		authGroup.DELETE("message", s.deleteChat) // TODO: сделать функцию
+
+	}
 
 	// Запуск сервера
 	go func() {

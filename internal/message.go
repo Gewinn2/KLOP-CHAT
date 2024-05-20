@@ -2,31 +2,68 @@ package internal
 
 import (
 	"Astra_Linux_chat/internal/database"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 func (s *Server) createMessage(c *gin.Context) { // создаем сообщение
-	var message database.Message
-	if err := c.ShouldBindJSON(&message); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	userIdToConv, ok := c.Get("userId")
+	if !ok {
+		c.String(http.StatusUnauthorized, "User ID not found")
+		fmt.Println("HandleDeleteAdvertisement:", ok)
 		return
 	}
-	// TODO: надо сохранять сообщение в бд
-	c.JSON(http.StatusCreated, message)
+	userId := userIdToConv.(int)
+
+	var message database.Message
+
+	err := c.BindJSON(&message)
+	if err != nil {
+		fmt.Println("createMessage:", err)
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	message.UserId = userId
+	message.CreatedAt = time.Now().Format("2006-01-02")
+	messageId, err := database.CreateMessage(s.DB, message)
+	if err != nil {
+		fmt.Println("createMessage:", err)
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, messageId)
 }
 
-func (s *Server) getMessage(c *gin.Context) { // получаем сообщение по айди
-	idStr := c.Param("id")
-	id, _ := strconv.Atoi(idStr)
-	// TODO: достаем сообщение из бд
-	message := database.Message{
-		MessageId: id,
-		Content:   "Hi",
-		UserId:    5,
-		ChatId:    2,
-		CreatedAt: "2022-01-01T00:00:00Z",
+func (s *Server) getAllChatsMessages(c *gin.Context) { // получаем сообщение по айди
+	chatIdStr := c.Query("id")
+	chatId, err := strconv.Atoi(chatIdStr)
+	if err != nil {
+		fmt.Println("getAllChatsMessages:", err)
+		c.JSON(http.StatusBadRequest, err)
+		return
 	}
-	c.JSON(http.StatusOK, message)
+
+	// TODO: добавить проверку есть ли пользователь в этом чате
+
+	AllChatsMessages, err := database.GetAllMessages(s.DB, chatId)
+	if err != nil {
+		fmt.Println("getAllChatsMessages:", err)
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, AllChatsMessages)
+}
+
+func (s *Server) updateMessage(c *gin.Context) {
+
+}
+
+func (s *Server) deleteMessage(c *gin.Context) {
+
 }
