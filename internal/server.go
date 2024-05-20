@@ -38,7 +38,10 @@ func (s *Server) Start() error {
 	authGroup := router.Group("/auth")
 	authGroup.Use(pkg.WithJWTAuth)
 	{
-
+		authGroup.GET("chat", s.getAllUsersChats)
+		authGroup.POST("chat", s.createChat)
+		authGroup.PUT("chat", s.createChat)    // TODO: сделать функцию
+		authGroup.DELETE("chat", s.createChat) // TODO: сделать функцию
 	}
 
 	// Сообщение
