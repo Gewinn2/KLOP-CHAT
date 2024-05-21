@@ -61,7 +61,7 @@ func GetAllChatByUserId(db *sql.DB, userId int) ([]GetAllChatByUserIdResult, err
 		}
 		message, err := GetLatestMessages(db, chatIdArr[i])
 		if err != nil {
-			return resultArr, fmt.Errorf("DBGetAllChatByUserId: %w", err)
+			fmt.Println("DBGetAllChatByUserId:", err)
 		}
 		result.ChatId = chat.ChatId
 		result.Name = chat.Name
@@ -98,12 +98,23 @@ func DeleteChatById(db *sql.DB, id int) error {
 
 	return nil
 }
+
 // Функция для поиска чатов
-func FindChatById(db *sql.DB, name string) (int, error) {
-	var chatID int
-    err := db.QueryRow("SELECT chat_id FROM chats WHERE name = ?", name).Scan(&chatID)
+func FindChatByName(db *sql.DB, name string) ([]int, error) {
+	var chatIdArr []int
+	rows, err := db.Query(`SELECT chat_id FROM chats WHERE name = $1`, name)
 	if err != nil {
-		return 0, fmt.Errorf("DBFindChatById: %w", err)
+		return chatIdArr, fmt.Errorf("DBFindChatByName: %w", err)
 	}
-	return chatID, nil
+	defer rows.Close()
+
+	for rows.Next() {
+		var chat Chat
+		err = rows.Scan(&chat.ChatId)
+		if err != nil {
+			return chatIdArr, fmt.Errorf("DBFindChatByName: %w", err)
+		}
+		chatIdArr = append(chatIdArr, chat.ChatId)
+	}
+	return chatIdArr, nil
 }

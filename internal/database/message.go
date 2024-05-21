@@ -25,7 +25,7 @@ func CreateMessage(db *sql.DB, message Message) (int, error) {
 func GetLatestMessages(db *sql.DB, chatId int) (Message, error) {
 	var message Message
 
-	row := db.QueryRow(`SELECT content, created_at FROM messages WHERE chat_id = $1 ORDER BY created_at DESC LIMIT 1`, chatId)
+	row := db.QueryRow(`SELECT content, created_at FROM messages WHERE chat_id = $1 ORDER BY message_id DESC LIMIT 1`, chatId)
 	err := row.Scan(&message.Content, &message.CreatedAt)
 	if err != nil {
 		return message, fmt.Errorf("GetLatestMessages: %w", err)

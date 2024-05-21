@@ -8,7 +8,7 @@ import (
 
 func GetNewMessagesFromDB(db *sql.DB, lastMessageID string) ([]Message, error) {
 	// Получаем все новые сообщения, которые были созданы после последнего полученного сообщения
-	rows, err := db.Query("SELECT message_id, content, user_id, chat_id, created_at FROM messages WHERE message_id > ? ORDER BY created_at ASC", lastMessageID)
+	rows, err := db.Query("SELECT message_id, content, user_id, chat_id, created_at FROM messages WHERE message_id > $1 ORDER BY created_at ASC", lastMessageID)
 	if err != nil {
 		return nil, err
 	}
@@ -31,4 +31,3 @@ func GetNewMessagesFromDB(db *sql.DB, lastMessageID string) ([]Message, error) {
 
 	return messages, nil
 }
-

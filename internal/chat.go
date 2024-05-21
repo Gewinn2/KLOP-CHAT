@@ -138,6 +138,7 @@ func (s *Server) deleteChat(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Chat deleted"})
 }
+
 // Функция для поиска чатов
 func (s *Server) findChat(c *gin.Context) {
 	name := c.Query("name")
@@ -147,10 +148,10 @@ func (s *Server) findChat(c *gin.Context) {
 		return
 	}
 
-	ChatId, err := database.FindChatById(s.DB, name)
+	ChatId, err := database.FindChatByName(s.DB, name)
 	if err != nil {
 		fmt.Println("findChat", err)
-	c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
