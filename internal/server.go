@@ -28,6 +28,7 @@ func (s *Server) Start() error {
 
 	router.Use(pkg.CORSMiddleware())
 
+	router.GET("/message/longpoll", s.longPollMessages)
 	router.GET("/", s.hello)
 
 	// Пользователи
