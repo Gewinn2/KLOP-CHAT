@@ -28,7 +28,6 @@ func (s *Server) Start() error {
 
 	router.Use(pkg.CORSMiddleware())
 
-	router.GET("/message/longpoll", s.longPollMessages)
 	router.GET("/", s.hello)
 
 	// Пользователи
@@ -52,7 +51,7 @@ func (s *Server) Start() error {
 		authGroup.POST("message", s.createMessage)
 		authGroup.PUT("message", s.updateMessage)
 		authGroup.DELETE("message", s.deleteMessage)
-
+		authGroup.GET("/message/longpoll", s.longPollMessages)
 	}
 
 	// Запуск сервера
