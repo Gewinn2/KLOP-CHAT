@@ -65,7 +65,7 @@ func (s *Server) createChat(c *gin.Context) {
 
 	c.JSON(http.StatusOK, result)
 }
-
+// Функция возвращает список чатов, приуроченных к пользователю (работает с помощью id пользователя)
 func (s *Server) getAllUsersChats(c *gin.Context) {
 	userIdToConv, ok := c.Get("userId")
 	if !ok {
@@ -85,10 +85,52 @@ func (s *Server) getAllUsersChats(c *gin.Context) {
 	c.JSON(http.StatusOK, AllUsersChats)
 }
 
+// Функция редактирования чата (фото чата, названия)
 func (s *Server) updateChat(c *gin.Context) {
+	chatIdToConv, ok := c.Get("chat_id")
+	if !ok {
+		c.String(http.StatusBadRequest, "Invalid chat ID")
+		fmt.Println("updateChat:", ok)
+		return
+	}
+	chatId := chatIdToConv.(int)
 
+	chat := database.Chat{}
+	err := c.ShouldBindJSON(&chat)
+	if err != nil {
+		c.String(http.StatusBadRequest, "Invalid chat data")
+		fmt.Println("updateChat:", err)
+		return
+	}
+	chat.ChatId = chatId
+
+	_, err = database.UpdateChatById(s.DB, chat)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Error updating chat")
+		fmt.Println("updateChat:", err)
+		return
+	}
+
+	c.JSON(http.StatusOK, chat)
 }
 
+// Функция удаления чата 
 func (s *Server) deleteChat(c *gin.Context) {
+	chatIdToConv, ok := c.Get("chat_id")
+	if !ok {
+		c.String(http.StatusBadRequest, "Invalid chat ID")
+		fmt.Println("deleteChat:", ok)
+		return
+	}
+	chatId := chatIdToConv.(int)
 
+	err := database.DeleteChatById(s.DB, chatId)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Error deleting chat")
+		fmt.Println("deleteChat:", err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Chat deleted"})
 }
+

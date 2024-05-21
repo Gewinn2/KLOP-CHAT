@@ -38,16 +38,20 @@ func (s *Server) Start() error {
 	authGroup := router.Group("/auth")
 	authGroup.Use(pkg.WithJWTAuth)
 	{
+		authGroup.GET("participant", s.getChatParticipants)
+		authGroup.POST("participant", s.addParticipant)
+		authGroup.DELETE("participant", s.deleteParticipant)
+
 		authGroup.GET("chat", s.getAllUsersChats)
 		authGroup.POST("chat", s.createChat)
-		authGroup.PUT("chat", s.updateChat)    // TODO: сделать функцию
-		authGroup.DELETE("chat", s.deleteChat) // TODO: сделать функцию
+		authGroup.PUT("chat", s.updateChat)
+		authGroup.DELETE("chat", s.deleteChat)
 
 		authGroup.GET("message", s.getAllChatsMessages)
-		authGroup.GET("last_message", s.getLatestMessage) // TODO: сделать функцию
+		//authGroup.GET("last_message", s.getLatestMessage)    РЕШЕНО БЫЛО ДОБАВИТЬ В ФУНКЦИЮ ВЫШЕ
 		authGroup.POST("message", s.createMessage)
-		authGroup.PUT("message", s.updateChat)    // TODO: сделать функцию
-		authGroup.DELETE("message", s.deleteChat) // TODO: сделать функцию
+		authGroup.PUT("message", s.updateMessage)         
+		authGroup.DELETE("message", s.deleteMessage)      
 
 	}
 
