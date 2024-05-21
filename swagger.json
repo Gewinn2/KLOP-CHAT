@@ -1,11 +1,10 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "IQJ",
+    "title": "KLOP CHAT",
     "version": "v1",
     "contact": {
-      "name": "IQJ API",
-      "url": "https://mireaiqj.ru"
+      "name": "CKOP CHAT API"
     }
   },
   "servers": [
@@ -75,7 +74,47 @@
       }
     },
     "/auth/chat":{
+      "get": {
+        "security": [
+          {                  "UserAuth": []
+          }
+        ],
+        "tags": [
+          "CHAT"
+        ],
+        "summary": "Получения всех чатов пользователя",
+        "responses":{
+          "200": {
+            "description": "Успешный ответ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "chat_id": {
+                      "type": "string",
+                      "example": "1"
+                    },
+                    "participants_id": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "example": [1, 2, 3]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
+        "security": [
+          {                  "UserAuth": []
+          }
+        ],
         "tags": [
           "CHAT"
         ],
@@ -100,7 +139,7 @@
                       "type": "integer",
                       "example": 1
                     },
-                    "example": [1, 2, 3]
+                    "example": [2, 3]
                   }
                 }
               }
@@ -135,10 +174,14 @@
         }
       },
       "put": {
+        "security": [
+          {                  "UserAuth": []
+          }
+        ],
         "tags": [
           "CHAT"
         ],
-        "summary": "Aутентификация",
+        "summary": "Редактирование названия и фото чата",
         "requestBody": {
           "content": {
             "application/json": {
@@ -150,7 +193,7 @@
         },
         "responses":{
           "200": {
-            "description": "Регистрация прошла успешно",
+            "description": "Чат изменен",
             "content": {
               "application/json": {
                 "schema": {
@@ -162,22 +205,17 @@
         }
       },
       "delete": {
+        "security": [
+          {                  "UserAuth": []
+          }
+        ],
         "tags": [
           "CHAT"
         ],
-        "summary": "Aутентификация",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserAuth"
-              }
-            }
-          }
-        },
+        "summary": "Удаление чата",
         "responses":{
           "200": {
-            "description": "Регистрация прошла успешно",
+            "description": "Чат удален",
             "content": {
               "application/json": {
                 "schema": {
@@ -192,7 +230,7 @@
   },
   "components": {
     "securitySchemes": {
-      "AdminAuth": {
+      "UserAuth": {
         "type": "apiKey",
         "name": "Authorization",
         "in": "header"
