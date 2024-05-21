@@ -4,7 +4,7 @@
     "title": "KLOP CHAT",
     "version": "v1",
     "contact": {
-      "name": "CKOP CHAT API"
+      "name": "KLOP CHAT API"
     }
   },
   "servers": [
@@ -19,7 +19,6 @@
           "USER"
         ],
         "summary": "Регистрация",
-        "operationId": "UserRegistration",
         "requestBody": {
           "content": {
             "application/json": {
@@ -451,6 +450,39 @@
                       "type": "string"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/message/longpoll":{
+      "get": {
+        "tags": [
+          "MESSAGE"
+        ],
+        "security": [
+          {                  "UserAuth": []
+          }
+        ],
+        "summary": "Получение сообщений",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "last_message_id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses":{
+          "200": {
+            "description": "Успешный ответ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
                 }
               }
             }
