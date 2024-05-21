@@ -42,8 +42,5 @@ func (s *Server) HandleSignIn(c *gin.Context) {
 		return
 	}
 
-	// присваиваем Jwt токен
-	c.Header("Authorization", fmt.Sprintf("Bearer %s", token))
-
-	c.JSON(http.StatusOK, "Authentication was successful")
+	c.JSON(http.StatusOK, token)
 }

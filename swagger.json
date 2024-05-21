@@ -73,6 +73,121 @@
           }
         }
       }
+    },
+    "/auth/chat":{
+      "post": {
+        "tags": [
+          "CHAT"
+        ],
+        "summary": "Создание чата",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Клопы"
+                  },
+                  "photo": {
+                    "type": "string",
+                    "example": "https://www.zastavki.com/pictures/originals/2018Animals___Cats_Large_gray_cat_with_a_surprised_look_123712_.jpg"
+                  },
+                  "user_id_arr": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "example": [1, 2, 3]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses":{
+          "200": {
+            "description": "Чат создан",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "chat_id": {
+                      "type": "string",
+                      "example": "1"
+                    },
+                    "participants_id": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "example": [1, 2, 3]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "CHAT"
+        ],
+        "summary": "Aутентификация",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses":{
+          "200": {
+            "description": "Регистрация прошла успешно",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAuth"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "CHAT"
+        ],
+        "summary": "Aутентификация",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserAuth"
+              }
+            }
+          }
+        },
+        "responses":{
+          "200": {
+            "description": "Регистрация прошла успешно",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAuth"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -127,4 +242,3 @@
     }
   }
 }
-
