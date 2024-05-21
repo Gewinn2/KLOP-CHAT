@@ -98,3 +98,12 @@ func DeleteChatById(db *sql.DB, id int) error {
 
 	return nil
 }
+// Функция для поиска чатов
+func FindChatById(db *sql.DB, name string) (int, error) {
+	var chatID int
+    err := db.QueryRow("SELECT chat_id FROM chats WHERE name = ?", name).Scan(&chatID)
+	if err != nil {
+		return 0, fmt.Errorf("DBFindChatById: %w", err)
+	}
+	return chatID, nil
+}
