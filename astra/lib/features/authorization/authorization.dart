@@ -1,4 +1,5 @@
 import 'package:astra/features/authorization/password.dart';
+import 'package:astra/repo/repo_post.dart';
 import 'package:flutter/material.dart';
 
 class Authorization extends StatefulWidget {
@@ -10,6 +11,20 @@ class Authorization extends StatefulWidget {
 }
 
 class _AuthorizationState extends State<Authorization> {
+
+  final loginController = TextEditingController();
+  final _passwordController = TextEditingController();
+  String email = "";
+  String password = "";
+
+  bool _obscureText = true;
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,6 +75,7 @@ class _AuthorizationState extends State<Authorization> {
                   child: Column( 
                     children: [
                       TextField(
+                        controller: loginController,
                         decoration: InputDecoration(
                           floatingLabelBehavior: FloatingLabelBehavior.always,
                           labelText: 'Логин',
@@ -70,15 +86,57 @@ class _AuthorizationState extends State<Authorization> {
                         autofocus: true,
                       ),
                       SizedBox(height: 20),
-                      PasswordTextField(),
+                      TextField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          labelText: 'Пароль',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
+                            onPressed: () {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                          ),
+                        ),
+                        obscureText: _obscureText,
+                        autofocus: true,
+                      ),
                       SizedBox(height: 70,),
                       ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(
-                            context,
-                            'main_screen_chat',
-                            //arguments: data, // Здесь вы передаете данные, которые хотите передать на `ChatsGroupList()`
-                          );
+                      // onPressed: () {
+                      //   Navigator.pushNamed(
+                      //       context,
+                      //       'main_screen_chat',
+                      //       //arguments: data, // Здесь вы передаете данные, которые хотите передать на `ChatsGroupList()`
+                      //     );
+                      // },
+                      onPressed: () async {
+                        // String email = 'ivanovivan@yandex.ru'; // Замените на актуальный email
+                        // String password = 'qwerty1234'; // Замените на актуальный пароль
+                        email = loginController.text;
+                        password = _passwordController.text;
+
+                        try {
+                          final response = await post_sign_in(email, password);
+                          if (response.statusCode == 200) {
+                            // Успешный ответ от сервера, переход на следующий экран
+                            Navigator.pushNamed(
+                              context, 
+                              'main_screen_chat'
+                            );
+                          } else {
+                            // Обработка ошибки
+                            print('Ошибка: ${response.statusCode}');
+                          }
+                        } catch (e) {
+                          // Обработка исключения при отправке запроса
+                          print('Исключение при отправке запроса: $e');
+                        }
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(59, 3, 102, 1)), // Фоновый цвет кнопки

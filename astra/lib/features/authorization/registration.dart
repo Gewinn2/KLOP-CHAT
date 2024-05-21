@@ -1,3 +1,4 @@
+import 'package:astra/repo/repo_post.dart';
 import 'package:flutter/material.dart';
 
 class Registration extends StatefulWidget {
@@ -9,6 +10,19 @@ class Registration extends StatefulWidget {
 }
 
 class _Registration extends State<Registration> {
+
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final pass2Controller = TextEditingController();
+  bool _obscureText = true;
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,6 +85,7 @@ class _Registration extends State<Registration> {
                   width: 400,
                   height: 45,
                   child: TextField(
+                    controller: nameController,
                           decoration: InputDecoration(
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             labelText: 'Ваше имя',
@@ -97,6 +112,7 @@ class _Registration extends State<Registration> {
                   width: 400,
                   height: 45,
                   child: TextField(
+                    controller: emailController,
                           decoration: InputDecoration(
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             labelText: 'Почта',
@@ -123,50 +139,83 @@ class _Registration extends State<Registration> {
                   width: 400,
                   height: 45,
                   child: TextField(
-                          decoration: InputDecoration(
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                            labelText: 'Пароль',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          labelText: 'Пароль',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          autofocus: true,
+                          suffixIcon: IconButton(
+                            icon: Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
+                            onPressed: () {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                          ),
                         ),
+                        obscureText: _obscureText,
+                        autofocus: true,
+                      ),
                 ),
                 SizedBox(height: 20,),
-                Text( 
-                        "Повторите пароль",
-                        textAlign: TextAlign.start,
-                        style: TextStyle( 
-                          color: Color.fromRGBO(59, 3, 102, 1),
-                          fontFamily: 'Inter',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),   
-                SizedBox(height: 20,),
-                Container(
-                  width: 400,
-                  height: 45,
-                  child: TextField(
-                          decoration: InputDecoration(
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                            labelText: 'Пароль',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          autofocus: true,
-                        ),
-                ),
+                // Text( 
+                //         "Повторите пароль",
+                //         textAlign: TextAlign.start,
+                //         style: TextStyle( 
+                //           color: Color.fromRGBO(59, 3, 102, 1),
+                //           fontFamily: 'Inter',
+                //           fontSize: 16,
+                //           fontWeight: FontWeight.w700,
+                //         ),
+                //       ),   
+                // SizedBox(height: 20,),
+                // Container(
+                //   width: 400,
+                //   height: 45,
+                //   child: TextField(
+                //     controller: pass2Controller,
+                //           decoration: InputDecoration(
+                //             floatingLabelBehavior: FloatingLabelBehavior.always,
+                //             labelText: 'Пароль',
+                //             border: OutlineInputBorder(
+                //               borderRadius: BorderRadius.circular(10),
+                //             ),
+                //           ),
+                //           autofocus: true,
+                //         ),
+                // ),
                 SizedBox(height: 70,),
                 ElevatedButton(
-                      onPressed: () {
-                        Navigator.popAndPushNamed(
-                            context,
-                            '/',
-                            //arguments: data, // Здесь вы передаете данные, которые хотите передать на `ChatsGroupList()`
-                          );
+                      // onPressed: () {
+                      //   Navigator.popAndPushNamed(
+                      //       context,
+                      //       '/',
+                      //       //arguments: data, // Здесь вы передаете данные, которые хотите передать на `ChatsGroupList()`
+                      //     );
+                      // },
+                      onPressed: () async {
+                        // String email = 'ivanovivan@yandex.ru'; // Замените на актуальный email
+                        // String password = 'qwerty1234'; // Замените на актуальный пароль
+
+                        try {
+                          final response = await post_sign_up(nameController.text, emailController.text, _passwordController.text);
+                          if (response.statusCode == 201) {
+                            // Успешный ответ от сервера, переход на следующий экран
+                            Navigator.pushNamed(
+                              context, 
+                              '/'
+                            );
+                            print("uraaaaaaaaaaaaaaaaaaaaaaaaaa");
+                          } else {
+                            // Обработка ошибки
+                            print('Ошибка: ${response.statusCode}');
+                          }
+                        } catch (e) {
+                          // Обработка исключения при отправке запроса
+                          print('Исключение при отправке запроса: $e');
+                        }
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(59, 3, 102, 1)), // Фоновый цвет кнопки

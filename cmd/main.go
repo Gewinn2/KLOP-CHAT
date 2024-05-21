@@ -9,7 +9,7 @@ import (
 func main() {
 	db := database.NewDB()
 
-	server, err := internal.NewServer(8080, db)
+	server, err := internal.NewServer(5050, db)
 	if err != nil {
 		fmt.Println("Error creating server:", err)
 		return

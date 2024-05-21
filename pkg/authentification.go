@@ -2,12 +2,14 @@ package pkg
 
 import (
 	"Astra_Linux_chat/config"
+	//"AstraLinux_TCPChat_hackathon/config"
 	"errors"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 )
 
 // Структура для параметров JWT
