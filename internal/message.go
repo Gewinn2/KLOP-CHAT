@@ -13,7 +13,7 @@ func (s *Server) createMessage(c *gin.Context) { // создаем сообще�
 	userIdToConv, ok := c.Get("userId")
 	if !ok {
 		c.String(http.StatusUnauthorized, "User ID not found")
-		fmt.Println("HandleDeleteAdvertisement:", ok)
+		fmt.Println("createMessage:", ok)
 		return
 	}
 	userId := userIdToConv.(int)

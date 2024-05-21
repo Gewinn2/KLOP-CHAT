@@ -23,7 +23,7 @@ func (s *Server) createChat(c *gin.Context) {
 	userIdToConv, ok := c.Get("userId")
 	if !ok {
 		c.String(http.StatusUnauthorized, "User ID not found")
-		fmt.Println("HandleDeleteAdvertisement:", ok)
+		fmt.Println("createChat:", ok)
 		return
 	}
 	userId := userIdToConv.(int)
@@ -70,7 +70,7 @@ func (s *Server) getAllUsersChats(c *gin.Context) {
 	userIdToConv, ok := c.Get("userId")
 	if !ok {
 		c.String(http.StatusUnauthorized, "User ID not found")
-		fmt.Println("HandleDeleteAdvertisement:", ok)
+		fmt.Println("getAllUsersChats:", ok)
 		return
 	}
 	userId := userIdToConv.(int)
