@@ -138,3 +138,12 @@ func (s *Server) deleteChat(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Chat deleted"})
 }
+// Функция для поиска чатов
+func (s *Server) findChat(name string) (int, error) {
+    chatID, err := s.getChatIDByName(name)
+    if err == nil {
+        return chatID, nil
+    }
+
+    return 0, fmt.Errorf("Чат или пользователь с названием '%s' не найден", name)
+}
