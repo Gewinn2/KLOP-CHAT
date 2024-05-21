@@ -27,7 +27,7 @@ func GetAllChatByUserId(db *sql.DB, userId int) ([]Chat, error) {
 	var chatArr []Chat
 
 	var chatIdArr []int
-	rows, err := db.Query(`SELECT chat_id FROM chats_participants WHERE user_id = $1`, userId)
+	rows, err := db.Query(`SELECT chat_id FROM chats_partiсipants WHERE user_id = $1`, userId)
 	if err != nil {
 		return chatArr, fmt.Errorf("DBGetAllChatByUserId: %w", err)
 	}
