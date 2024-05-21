@@ -49,10 +49,9 @@ func (s *Server) Start() error {
 		authGroup.DELETE("chat", s.deleteChat)
 
 		authGroup.GET("message", s.getAllChatsMessages)
-		//authGroup.GET("last_message", s.getLatestMessage)    РЕШЕНО БЫЛО ДОБАВИТЬ В ФУНКЦИЮ ВЫШЕ
 		authGroup.POST("message", s.createMessage)
-		authGroup.PUT("message", s.updateMessage)         
-		authGroup.DELETE("message", s.deleteMessage)      
+		authGroup.PUT("message", s.updateMessage)
+		authGroup.DELETE("message", s.deleteMessage)
 
 	}
 

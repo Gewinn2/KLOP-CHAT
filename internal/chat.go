@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -15,8 +16,10 @@ type fullCreateChat struct {
 }
 
 type createChatResult struct {
-	ChatId         int   `json:"chat_id"`
-	ParticipantsId []int `json:"participants_id"`
+	ChatId         int    `json:"chat_id"`
+	Name           string `json:"name"`
+	Photo          string `json:"photo"`
+	ParticipantsId []int  `json:"participants_id"`
 }
 
 func (s *Server) createChat(c *gin.Context) {
@@ -50,7 +53,8 @@ func (s *Server) createChat(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
-
+	result.Name = full.Name
+	result.Photo = full.Photo
 	result.ChatId = chatId
 
 	for i := range full.UserIdArr {
@@ -65,6 +69,7 @@ func (s *Server) createChat(c *gin.Context) {
 
 	c.JSON(http.StatusOK, result)
 }
+
 // Функция возвращает список чатов, приуроченных к пользователю (работает с помощью id пользователя)
 func (s *Server) getAllUsersChats(c *gin.Context) {
 	userIdToConv, ok := c.Get("userId")
@@ -114,17 +119,17 @@ func (s *Server) updateChat(c *gin.Context) {
 	c.JSON(http.StatusOK, chat)
 }
 
-// Функция удаления чата 
+// Функция удаления чата
 func (s *Server) deleteChat(c *gin.Context) {
-	chatIdToConv, ok := c.Get("chat_id")
-	if !ok {
-		c.String(http.StatusBadRequest, "Invalid chat ID")
-		fmt.Println("deleteChat:", ok)
+	chatIdStr := c.Query("id")
+	chatId, err := strconv.Atoi(chatIdStr)
+	if err != nil {
+		fmt.Println("getAllChatsMessages:", err)
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
-	chatId := chatIdToConv.(int)
 
-	err := database.DeleteChatById(s.DB, chatId)
+	err = database.DeleteChatById(s.DB, chatId)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Error deleting chat")
 		fmt.Println("deleteChat:", err)
@@ -133,4 +138,3 @@ func (s *Server) deleteChat(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Chat deleted"})
 }
-

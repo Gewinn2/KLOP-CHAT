@@ -60,8 +60,6 @@ func (s *Server) getAllChatsMessages(c *gin.Context) { // получаем со�
 	c.JSON(http.StatusOK, AllChatsMessages)
 }
 
-//func (s *Server) getLatestMessage(c *gin.Context) {}
-
 func (s *Server) updateMessage(c *gin.Context) {
 	var message database.Message
 	if err := c.ShouldBindJSON(&message); err != nil {
@@ -81,15 +79,15 @@ func (s *Server) updateMessage(c *gin.Context) {
 }
 
 func (s *Server) deleteMessage(c *gin.Context) {
-	messageIdToConv, ok := c.Get("message_id")
-	if !ok {
-		c.String(http.StatusBadRequest, "Invalid message ID")
-		fmt.Println("deleteMessage:", ok)
+	messageIdStr := c.Query("id")
+	messageId, err := strconv.Atoi(messageIdStr)
+	if err != nil {
+		fmt.Println("getAllChatsMessages:", err)
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
-	messageId := messageIdToConv.(int)
 
-	err := database.DeleteMessageById(s.DB, messageId)
+	err = database.DeleteMessageById(s.DB, messageId)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Error deleting message")
 		fmt.Println("deleteMessage:", err)
@@ -98,4 +96,3 @@ func (s *Server) deleteMessage(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Message deleted"})
 }
-

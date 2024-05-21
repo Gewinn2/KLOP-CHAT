@@ -89,19 +89,26 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "chat_id": {
-                      "type": "string",
-                      "example": "1"
-                    },
-                    "participants_id": {
-                      "type": "array",
-                      "items": {
-                        "type": "integer",
-                        "example": 1
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "chat_id": {
+                        "type": "integer"
                       },
-                      "example": [1, 2, 3]
+                      "name": {
+                        "type": "string"
+                      },
+                      "photo": {
+                        "type": "string"
+                      },
+                      "content": {
+                        "type": "string"
+                      },
+                      "message_created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
                     }
                   }
                 }
@@ -158,6 +165,14 @@
                       "type": "string",
                       "example": "1"
                     },
+                    "name": {
+                      "type":
+                      "string"
+                    },
+                    "photo": {
+                      "type":
+                      "string"
+                    },
                     "participants_id": {
                       "type": "array",
                       "items": {
@@ -213,13 +228,229 @@
           "CHAT"
         ],
         "summary": "Удаление чата",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses":{
           "200": {
             "description": "Чат удален",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserAuth"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/message":{
+      "get": {
+        "security": [
+          {                  "UserAuth": []
+          }
+        ],
+        "tags": [
+          "MESSAGE"
+        ],
+        "summary": "Получения всех сообщений в чате",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses":{
+          "200": {
+            "description": "Успешный ответ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "message_id": {
+                        "type": "integer"
+                      },
+                      "content": {
+                        "type": "string"
+                      },
+                      "user_id": {
+                        "type": "string"
+                      },
+                      "chat_id": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {                  "UserAuth": []
+          }
+        ],
+        "tags": [
+          "MESSAGE"
+        ],
+        "summary": "Создание сообщения",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "example":
+                    "Привет"
+                  },
+                  "chat_id": {
+                    "type": "integer",
+                    "example": "1"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses":{
+          "200": {
+            "description": "Чат создан",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "string",
+                      "example":
+                      "Привет"
+                    },
+                    "chat_id": {
+                      "type": "integer",
+                      "example": "1"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {                  "UserAuth": []
+          }
+        ],
+        "tags": [
+          "MESSAGE"
+        ],
+        "summary": "Редактирование сообщения",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "example":
+                    "Привет2"
+                  },
+                  "message_id": {
+                    "type": "integer",
+                    "example": "1"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses":{
+          "200": {
+            "description": "Сообщение изменено",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message_id": {
+                      "type": "integer"
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "user_id": {
+                      "type": "string"
+                    },
+                    "chat_id": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {                  "UserAuth": []
+          }
+        ],
+        "tags": [
+          "MESSAGE"
+        ],
+        "summary": "Удаление сообщения",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses":{
+          "200": {
+            "description": "Чат удален",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }

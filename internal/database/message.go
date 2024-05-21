@@ -20,6 +20,20 @@ func CreateMessage(db *sql.DB, message Message) (int, error) {
 	return messageId, nil
 }
 
+// GetLatestMessages возвращает последнее сообщение чата
+// Принимает chat_id и возвращает последнее сообщение чата
+func GetLatestMessages(db *sql.DB, chatId int) (Message, error) {
+	var message Message
+
+	row := db.QueryRow(`SELECT content, created_at FROM messages WHERE chat_id = $1 ORDER BY created_at DESC LIMIT 1`, chatId)
+	err := row.Scan(&message.Content, &message.CreatedAt)
+	if err != nil {
+		return message, fmt.Errorf("GetLatestMessages: %w", err)
+	}
+
+	return message, nil
+}
+
 // GetAllMessages возвращает все сообщения чата
 // Принимает chat_id и возвращает массив сообщений этого чата
 func GetAllMessages(db *sql.DB, chatId int) ([]Message, error) {

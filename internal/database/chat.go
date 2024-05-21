@@ -21,15 +21,23 @@ func CreateChat(db *sql.DB, chat Chat) (int, error) {
 	return chatId, nil
 }
 
+type GetAllChatByUserIdResult struct {
+	ChatId    int    `json:"chat_id"`
+	Name      string `json:"name"`
+	Photo     string `json:"photo"`
+	Content   string `json:"content"`
+	CreatedAt string `json:"message_created_at"`
+}
+
 // GetAllChatByUserId возвращает все чаты пользователя
 // Принимает user_id и возвращает массив чатов, в которых участвует этот пользователь
-func GetAllChatByUserId(db *sql.DB, userId int) ([]Chat, error) {
-	var chatArr []Chat
+func GetAllChatByUserId(db *sql.DB, userId int) ([]GetAllChatByUserIdResult, error) {
+	var resultArr []GetAllChatByUserIdResult
 
 	var chatIdArr []int
 	rows, err := db.Query(`SELECT chat_id FROM chats_partiсipants WHERE user_id = $1`, userId)
 	if err != nil {
-		return chatArr, fmt.Errorf("DBGetAllChatByUserId: %w", err)
+		return resultArr, fmt.Errorf("DBGetAllChatByUserId: %w", err)
 	}
 	defer rows.Close()
 
@@ -37,22 +45,33 @@ func GetAllChatByUserId(db *sql.DB, userId int) ([]Chat, error) {
 		var chatParticipant ChatParticipant
 		err = rows.Scan(&chatParticipant.ChatId)
 		if err != nil {
-			return chatArr, fmt.Errorf("DBGetAllChatByUserId: %w", err)
+			return resultArr, fmt.Errorf("DBGetAllChatByUserId: %w", err)
 		}
 		chatIdArr = append(chatIdArr, chatParticipant.ChatId)
 	}
 
 	for i := range chatIdArr {
+		var result GetAllChatByUserIdResult
+
 		var chat Chat
 		row := db.QueryRow(`SELECT * FROM chats WHERE chat_id = $1`, chatIdArr[i])
 		err = row.Scan(&chat.ChatId, &chat.Name, &chat.Photo, &chat.CreatedAt)
 		if err != nil {
-			return chatArr, fmt.Errorf("DBGetAllChatByUserId: %w", err)
+			return resultArr, fmt.Errorf("DBGetAllChatByUserId: %w", err)
 		}
-		chatArr = append(chatArr, chat)
+		message, err := GetLatestMessages(db, chatIdArr[i])
+		if err != nil {
+			return resultArr, fmt.Errorf("DBGetAllChatByUserId: %w", err)
+		}
+		result.ChatId = chat.ChatId
+		result.Name = chat.Name
+		result.Photo = chat.Photo
+		result.Content = message.Content
+		result.CreatedAt = message.CreatedAt
+		resultArr = append(resultArr, result)
 	}
 
-	return chatArr, nil
+	return resultArr, nil
 }
 
 // UpdateChatById изменяет данные чата
