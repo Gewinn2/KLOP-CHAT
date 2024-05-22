@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -42,10 +43,17 @@ func (s *Server) createChat(c *gin.Context) {
 	full.UserIdArr = append(full.UserIdArr, userId)
 
 	var result createChatResult
-
+	
+	rand.Seed(time.Now().UnixNano())
+	colors := []string{"https://images.app.goo.gl/nXB9xCGPQXp1WAaR6", "https://images.app.goo.gl/HCwpsUom368AMP6RA", 
+	"https://images.app.goo.gl/Rz9McvBXmyLbgZc59", "https://images.app.goo.gl/Q2kwvCjMdYEVMjcX6", "https://images.app.goo.gl/9efoY52cXtYwZzEN9",
+	"https://images.app.goo.gl/sjfRcq96ypQ4yhqQ7", "https://images.app.goo.gl/NYUzDxHHfVkovkKS8", "https://images.app.goo.gl/APgjWqDgcEBXpSnT9", 
+	"https://images.app.goo.gl/mp7eUs5F94trFge5A", "https://images.app.goo.gl/zqwTYw5Lo14FKs7w8", "https://images.app.goo.gl/44pDJPCcdvMDe7oG9"}
+	colorChat := colors[rand.Intn(11)]
+	
 	var chat database.Chat
 	chat.Name = full.Name
-	chat.Photo = full.Photo
+	chat.Photo = colorChat
 	chat.CreatedAt = time.Now().Format("2006-01-02")
 	chatId, err := database.CreateChat(s.DB, chat)
 	if err != nil {
@@ -54,7 +62,7 @@ func (s *Server) createChat(c *gin.Context) {
 		return
 	}
 	result.Name = full.Name
-	result.Photo = full.Photo
+	result.Photo = colorChat
 	result.ChatId = chatId
 
 	for i := range full.UserIdArr {
@@ -156,4 +164,35 @@ func (s *Server) findChat(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, ChatId)
+}
+
+// Функция для возврата списка чатов по приоритетам
+func (s *Server) getChatsPriority(c *gin.Context) {
+	userIdToConv, ok := c.Get("userId")
+	if !ok {
+		c.String(http.StatusUnauthorized, "User ID not found")
+		fmt.Println("getChatsPriority:", ok)
+		return
+	}
+	userId := userIdToConv.(int)
+
+	AllUsersChats, err := database.GetAllChatByUserId(s.DB, userId)
+	if err != nil {
+		fmt.Println("getAllUsersChats:", err)
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	sort.Slice(AllUsersChats, func(i, j int) bool {
+		first, _ := database.GetAllMessages(s.DB, AllUsersChats[i].ChatId)
+
+		second, _ := database.GetAllMessages(s.DB, AllUsersChats[j].ChatId)
+
+		return len(first) > len(second)
+	})
+	if len(AllUsersChats) > 5 {
+		c.JSON(http.StatusOK, AllUsersChats[:5])
+	} else {
+		c.JSON(http.StatusOK, AllUsersChats)
+	}
 }
