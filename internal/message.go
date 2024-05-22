@@ -40,7 +40,7 @@ func (s *Server) createMessage(c *gin.Context) { // создаем сообще�
 	message.Content = encryptedBody
 
 	message.UserId = userId
-	message.CreatedAt = time.Now().Format("2006-01-02")
+	message.CreatedAt = time.Now().Format("2006-01-02 15:04")
 	messageId, err := database.CreateMessage(s.DB, message)
 	if err != nil {
 		fmt.Println("createMessage:", err)

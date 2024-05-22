@@ -55,7 +55,7 @@ func (s *Server) createChat(c *gin.Context) {
 	var chat database.Chat
 	chat.Name = full.Name
 	chat.Photo = colorChat
-	chat.CreatedAt = time.Now().Format("2006-01-02")
+	chat.CreatedAt = time.Now().Format("2006-01-02 15:04")
 	chatId, err := database.CreateChat(s.DB, chat)
 	if err != nil {
 		fmt.Println("createChat:", err)
