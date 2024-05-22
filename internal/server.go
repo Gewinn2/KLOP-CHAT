@@ -31,7 +31,7 @@ func (s *Server) Start() error {
 	router.GET("/", s.hello)
 
 	// Пользователи
-	router.GET("/users/:id", s.getUser)     // получить айди пользователя
+	router.GET("/user", s.getUserById)      // получить пользователя по айди
 	router.POST("/sign-up", s.HandleSignUp) // создание пользователя (запрос для регистрации)
 	router.POST("/sign-in", s.HandleSignIn) // создание пользователя (запрос для регистрации)
 
