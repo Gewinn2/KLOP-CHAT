@@ -1,6 +1,8 @@
 package database
 
 import (
+	"Astra_Linux_chat/config"
+	"Astra_Linux_chat/pkg"
 	"database/sql"
 	"fmt"
 )
@@ -31,6 +33,14 @@ func GetLatestMessages(db *sql.DB, chatId int) (Message, error) {
 		return message, fmt.Errorf("GetLatestMessages: %w", err)
 	}
 
+	key := []byte(config.EncryptionKey)
+	decryptedMessage, err := pkg.DecryptMessage(message.Content, key)
+	if err != nil {
+		return message, err
+	}
+
+	message.Content = decryptedMessage
+
 	return message, nil
 }
 
@@ -49,6 +59,15 @@ func GetAllMessages(db *sql.DB, chatId int) ([]Message, error) {
 		if err = rows.Scan(&message.MessageId, &message.Content, &message.UserId, &message.ChatId, &message.CreatedAt); err != nil {
 			return messageArr, fmt.Errorf("DBGetAllMessages: %w", err)
 		}
+
+		key := []byte(config.EncryptionKey)
+		decryptedMessage, err := pkg.DecryptMessage(message.Content, key)
+		if err != nil {
+			return messageArr, err
+		}
+
+		message.Content = decryptedMessage
+
 		messageArr = append(messageArr, message)
 	}
 

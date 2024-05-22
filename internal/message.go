@@ -1,7 +1,9 @@
 package internal
 
 import (
+	"Astra_Linux_chat/config"
 	"Astra_Linux_chat/internal/database"
+	"Astra_Linux_chat/pkg"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -26,6 +28,16 @@ func (s *Server) createMessage(c *gin.Context) { // создаем сообще�
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
+
+	// Шифруем сообщение перед сохранением в базу данных
+	key := []byte(config.EncryptionKey)
+	encryptedBody, err := pkg.EncryptMessage(message.Content, key)
+	if err != nil {
+		fmt.Println("createMessage:", err)
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+	message.Content = encryptedBody
 
 	message.UserId = userId
 	message.CreatedAt = time.Now().Format("2006-01-02")
@@ -67,6 +79,16 @@ func (s *Server) updateMessage(c *gin.Context) {
 		fmt.Println("updateMessage:", err)
 		return
 	}
+
+	// Шифруем сообщение перед сохранением в базу данных
+	key := []byte(config.EncryptionKey)
+	encryptedBody, err := pkg.EncryptMessage(message.Content, key)
+	if err != nil {
+		fmt.Println("createMessage:", err)
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+	message.Content = encryptedBody
 
 	updatedMessage, err := database.UpdateMessageById(s.DB, message)
 	if err != nil {
