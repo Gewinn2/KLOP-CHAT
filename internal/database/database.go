@@ -25,7 +25,10 @@ func NewDB() *sql.DB {
 		username VARCHAR(50) NOT NULL,
     	email varchar(100) NOT NULL,
     	password TEXT NOT NULL,
-    	photo TEXT,
+    	photo TEXT NOT NULL,
+    	user_role varchar(10) NOT NULL,
+    	last_activity TIMESTAMP NOT NULL,
+    	ban varchar(20) NOT NULL,
     	created_at TIMESTAMP
 	);`)
 	if err != nil {
