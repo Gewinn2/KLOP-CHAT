@@ -43,7 +43,7 @@ func (s *Server) Start() error {
 		authGroup.DELETE("participant", s.deleteParticipant)
 
 		authGroup.GET("chat", s.getAllUsersChats)
-		authGroup.GET("chat/prioriry", s.getChatsPriority)
+		authGroup.GET("chat/priority", s.getChatsPriority)
 		authGroup.POST("chat", s.createChat)
 		authGroup.PUT("chat", s.updateChat)
 		authGroup.DELETE("chat", s.deleteChat)
