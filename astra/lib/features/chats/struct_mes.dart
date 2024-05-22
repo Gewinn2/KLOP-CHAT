@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 
 // {
 //     "message_id": 3,
@@ -51,7 +52,12 @@ class StructMessage extends StatelessWidget {
         ),
         child: Text(
           message,
-          style: TextStyle(color: Colors.white), // Цвет текста
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Inter',
+            fontSize: 16,
+            fontWeight:FontWeight.w500,
+            ), // Цвет текста
         ),
       ),
     );

@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 class ChatBubble extends StatefulWidget {
   final String imageUrl;
   final String chatTitle;
+  final String last_mes;
   const ChatBubble({
     required this.imageUrl,
     required this.chatTitle,
-    super.key,
+    super.key, required this.last_mes,
   });
 
   @override
@@ -61,6 +62,14 @@ class _ChatBubble extends State<ChatBubble> {
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                     fontSize: 20,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  widget.last_mes,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 16,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
