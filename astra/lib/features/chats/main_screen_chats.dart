@@ -39,13 +39,19 @@ class _MainChatScreen extends State<MainChatScreen> {
 
 
   int _selectedUserIndex = 0;
+  bool flag_tab = false;
+  List<Message>message = [];
+  void update(List<Message> a) {
+    setState(() {
+      message = a;
+    });
+  }
 
   // Заглушка для списка пользователей
   //final List<String> _users = ['Alice', 'Bob', 'Charlie', 'Diana','And','Pop','Wik',"Wed",'Marik','Andro','Pipa','Tata'];
 
   @override
   Widget build(BuildContext context) {
-    List<Message>message = [];
     return Scaffold(
       appBar: AppBar(   
         //automaticallyImplyLeading: false, 
@@ -75,15 +81,19 @@ class _MainChatScreen extends State<MainChatScreen> {
                 return ListTile(
                   title: ChatBubble(
                     chatTitle: _users[index].name, 
-                    imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH-BPnpCcCSysCnqNBWDDAnYGNgnFyRpCrP4cQ6NGgqA&s', 
+                    imageUrl: 'https://img.freepik.com/free-photo/abstract-textured-backgound_1258-30627.jpg?size=338&ext=jpg&ga=GA1.1.44546679.1716163200&semt=ais_user', 
                   ), //Text(_users[index])
                   selected: index == _selectedUserIndex,
                   onTap: () async{
                     setState(() {
                       _selectedUserIndex = index;
                     });
+                    setState(() {
+                      flag_tab = true;
+                    });
                     try {
-                          message = await getMessage(jwt, _users[index].chat_id);
+                          List<Message> help = await getMessage(jwt, _users[index].chat_id);
+                          update(help);
                           print(message);
                           
                     } catch (e) {
@@ -103,7 +113,7 @@ class _MainChatScreen extends State<MainChatScreen> {
           // Панель чата
           Expanded(
             flex: 8, // Занимает 3/4 пространства
-            child: ChatPanel(user: _users[_selectedUserIndex],jwt: jwt,),
+            child: ChatPanel(user: _users[_selectedUserIndex],jwt: jwt,message: message, flag: flag_tab,),
           ),
         ],
       ),
