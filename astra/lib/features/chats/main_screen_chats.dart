@@ -14,14 +14,16 @@ class MainChatScreen extends StatefulWidget {
 class _MainChatScreen extends State<MainChatScreen> {
 
   List<User> _users = [];
+  String jwt = "";
 
   @override
   void didChangeDependencies() {
     final args = ModalRoute.of(context)?.settings.arguments;
     assert(args != null, "Check args");
     print(args);
-    List<User> help = args as List<User>;
-    _users = help;
+    List<Object> help = args as List<Object>;
+    _users = help[0] as List<User>;
+    jwt = help[1] as String;
     // user_name =
     //     help["name"] as String?; // Присваивание значения переменной user_name
     // image_url = help["url"] as String?;
@@ -43,6 +45,7 @@ class _MainChatScreen extends State<MainChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Message>message = [];
     return Scaffold(
       appBar: AppBar(   
         //automaticallyImplyLeading: false, 
@@ -75,10 +78,18 @@ class _MainChatScreen extends State<MainChatScreen> {
                     imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH-BPnpCcCSysCnqNBWDDAnYGNgnFyRpCrP4cQ6NGgqA&s', 
                   ), //Text(_users[index])
                   selected: index == _selectedUserIndex,
-                  onTap: () {
+                  onTap: () async{
                     setState(() {
                       _selectedUserIndex = index;
                     });
+                    try {
+                          message = await getMessage(jwt, _users[index].chat_id);
+                          print(message);
+                          
+                    } catch (e) {
+                          // Обработка исключения при отправке запроса
+                        print('Исключение при отправке запроса: $e');
+                    }
                   },
                 );
               },
@@ -92,7 +103,7 @@ class _MainChatScreen extends State<MainChatScreen> {
           // Панель чата
           Expanded(
             flex: 8, // Занимает 3/4 пространства
-            child: ChatPanel(user_name: _users[_selectedUserIndex].name),
+            child: ChatPanel(user: _users[_selectedUserIndex],jwt: jwt,),
           ),
         ],
       ),

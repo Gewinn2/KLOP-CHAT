@@ -1,9 +1,11 @@
+import 'package:astra/repo/repo_post.dart';
 import 'package:flutter/material.dart';
 
 class ChatPanel extends StatefulWidget {
-  final String user_name;
+  final User user;
+  final String jwt;
 
-  const ChatPanel({super.key, required this.user_name});
+  const ChatPanel({super.key, required this.user,required this.jwt});
 
   @override
   _ChatPanelState createState() => _ChatPanelState();
@@ -82,7 +84,7 @@ class _ChatPanelState extends State<ChatPanel> {
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.35,
                                 child: Text(
-                                  widget.user_name,
+                                  widget.user.name,
                                   style: TextStyle(
                                     color: Theme.of(context)
                                         .colorScheme
@@ -163,9 +165,22 @@ class _ChatPanelState extends State<ChatPanel> {
                     icon: const Icon(Icons.attach_file_outlined),
                   ),
                   IconButton(
-                    onPressed: () {
-                      // Действие при нажатии на кнопку отправки сообщения
-                    },
+                    onPressed: () async {
+                        String content = _msgController.text;
+
+                        try {
+                          final response = await post_message(content, widget.user.chat_id,widget.jwt );
+                          if (response.statusCode == 200) {
+                            print("сообщение отправлено");
+                          } else {
+                            // Обработка ошибки
+                            print('Ошибка: ${response.statusCode}');
+                          }
+                        } catch (e) {
+                          // Обработка исключения при отправке запроса
+                          print('Исключение при отправке запроса: $e');
+                        }
+                      },
                     icon: const Icon(Icons.send),
                   ),
                 ],

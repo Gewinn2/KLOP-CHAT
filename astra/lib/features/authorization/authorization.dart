@@ -145,7 +145,7 @@ class _AuthorizationState extends State<Authorization> {
                             Navigator.pushNamed(
                               context, 
                               'main_screen_chat',
-                              arguments: users,
+                              arguments: [users,jwt],
                             );
                           } else {
                             // Обработка ошибки

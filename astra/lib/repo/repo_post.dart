@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 Future<http.Response> post_sign_in(
   String email,
-  String pass,
+  String pass, 
 ) async {
   return http.post(
     Uri(
@@ -104,8 +104,6 @@ Future<List<User>> getUser(String jwtToken) async {
     // final dynamic hi = jsonList[0];
     // print(hi['image_link'][0]);
     newsList = jsonList.map((json) {
-      List<dynamic> dynamicList = json['tags']==null? [] : json['tags'] as List<dynamic>;
-      List<String> stringList = dynamicList.map((item) => item.toString()).toList();
       return User(
         chat_id: json['chat_id'].toString(), 
         name: json['name'], 
@@ -113,6 +111,97 @@ Future<List<User>> getUser(String jwtToken) async {
         content: json['content'], 
         message_created_at: json['message_created_at'],
         
+      );
+    }).toList();
+    return newsList;
+  } else {
+    throw Exception(response.statusCode);
+  }
+}
+
+
+// {
+//   "content": "Привет",
+//   "chat_id": 1
+// }
+
+
+Future<http.Response> post_message(
+  String content,
+  String chat_id,
+  String jwtToken,
+  //String photo,
+) async {
+  int chatIdAsInt = -1;
+
+  try {
+    chatIdAsInt = int.parse(chat_id);
+    print('chat_id как int: $chatIdAsInt');
+  } catch (e) {
+    // Обработка ошибки, если строка не содержит число, которое можно преобразовать
+    print('Ошибка при преобразовании chat_id в int: $e');
+  }
+  return http.post(
+    Uri(
+      scheme: 'http',
+      host: 'localhost',
+      port: 5050,
+      path: '/auth/message',
+    ),
+    headers: {
+      'Authorization': 'Bearer $jwtToken',
+    },
+    body: jsonEncode({
+      'content' : content,
+      'chat_id' : chatIdAsInt,
+    }),
+  );
+}
+
+class Message {
+    final String message_id;
+    final String content;
+    final String user_id;
+    final String chat_id;
+    final String created_at;
+    Message({
+    required this.message_id,
+    required this.content,
+    required this.user_id,
+    required this.chat_id,
+    required this.created_at,
+  });
+}
+
+
+Future<List<Message>> getMessage(String jwtToken,String id) async {
+  final response = await http.get(
+    Uri(
+      scheme: 'http',
+      host: 'localhost',
+      port: 5050,
+      path: '/auth/message',
+      queryParameters: {'id': id},
+    ),
+    headers: {
+      'Authorization': 'Bearer $jwtToken',
+    },
+  );
+  if (response.statusCode == 200) {
+    final dynamic decodedData = json.decode(response.body);
+    print(decodedData);
+    List<Message> newsList = [];
+    final List<dynamic> jsonList = decodedData as List;
+    // final dynamic hi = jsonList[0];
+    // print(hi['image_link'][0]);
+    newsList = jsonList.map((json) {
+      return Message(
+          
+        message_id: json['message_id'].toString(),
+        content: json['content'],
+       user_id: json['user_id'].toString(),
+       chat_id: json['chat_id'].toString(),
+       created_at: json['created_at']
       );
     }).toList();
     return newsList;
