@@ -54,3 +54,69 @@ Future<http.Response> post_sign_up(
     }),
   );
 }
+
+
+class User {
+  // {
+  //   "chat_id": 0,
+  //   "name": "string",
+  //   "photo": "string",
+  //   "content": "string",
+  //   "message_created_at": "2024-05-21T13:11:44.028Z"
+  // }
+  final String chat_id;
+  final String name;
+  final String photo;
+  final String content;
+  final String message_created_at;
+
+  User({
+    required this.chat_id,
+    required this.name,
+    required this.photo,
+    required this.content,
+    required this.message_created_at,
+  });
+
+}
+
+///auth/message
+//
+///
+
+Future<List<User>> getUser(String jwtToken) async {
+  final response = await http.get(
+    Uri(
+      scheme: 'http',
+      host: 'localhost',
+      port: 5050,
+      path: '/auth/chat',
+    ),
+    headers: {
+      'Authorization': 'Bearer $jwtToken',
+    },
+  );
+  if (response.statusCode == 200) {
+    final dynamic decodedData = json.decode(response.body);
+    print(decodedData);
+    List<User> newsList = [];
+    final List<dynamic> jsonList = decodedData as List;
+    // final dynamic hi = jsonList[0];
+    // print(hi['image_link'][0]);
+    newsList = jsonList.map((json) {
+      List<dynamic> dynamicList = json['tags']==null? [] : json['tags'] as List<dynamic>;
+      List<String> stringList = dynamicList.map((item) => item.toString()).toList();
+      return User(
+        chat_id: json['chat_id'].toString(), 
+        name: json['name'], 
+        photo: json['photo'], 
+        content: json['content'], 
+        message_created_at: json['message_created_at'],
+        
+      );
+    }).toList();
+    return newsList;
+  } else {
+    throw Exception(response.statusCode);
+  }
+}

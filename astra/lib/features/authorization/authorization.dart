@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:astra/features/authorization/password.dart';
 import 'package:astra/repo/repo_post.dart';
 import 'package:flutter/material.dart';
@@ -124,10 +126,26 @@ class _AuthorizationState extends State<Authorization> {
                         try {
                           final response = await post_sign_in(email, password);
                           if (response.statusCode == 200) {
-                            // Успешный ответ от сервера, переход на следующий экран
+                          String body = response.body;
+                          String jwt = '';
+
+                          // Убедитесь, что тело ответа не пустое
+                          if (body.isNotEmpty) {
+                            // Удаление кавычек в начале и конце строки, если они есть
+                            String token = body.replaceAll('"', '');
+                            jwt = token;
+
+                            // Теперь переменная token содержит ваш JWT токен в виде String
+                            print('JWT Token: $token');
+                          }
+                          
+                          List<User>? users = await getUser(jwt);
+                          print(users);
+                          
                             Navigator.pushNamed(
                               context, 
-                              'main_screen_chat'
+                              'main_screen_chat',
+                              arguments: users,
                             );
                           } else {
                             // Обработка ошибки

@@ -45,80 +45,73 @@ class _ChatPanelState extends State<ChatPanel> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Theme.of(context).colorScheme.background,
-        title: Container(
-          width: MediaQuery.of(context).size.width,
-          child: ElevatedButton(
-            style: ButtonStyle(
-              padding: const MaterialStatePropertyAll(EdgeInsets.zero),
-              surfaceTintColor:
-                  const MaterialStatePropertyAll(Colors.transparent),
-              backgroundColor: const MaterialStatePropertyAll(
-                Colors.transparent,
-              ),
-              shadowColor: const MaterialStatePropertyAll(Colors.transparent),
-              shape: MaterialStatePropertyAll(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+        title: Column(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  padding: const MaterialStatePropertyAll(EdgeInsets.zero),
+                  surfaceTintColor:
+                      const MaterialStatePropertyAll(Colors.transparent),
+                  backgroundColor: const MaterialStatePropertyAll(
+                    Colors.transparent,
+                  ),
+                  shadowColor: const MaterialStatePropertyAll(Colors.transparent),
+                  shape: MaterialStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            onPressed: () {
-            },
-            child: Row(
-              children: [
-                _buildThumbnailImage("https://i.pinimg.com/736x/83/8f/84/838f840d51db226a8a0cb79b962f24d5.jpg"),
-                SizedBox(width: 15,),
-                //const Padding(padding: EdgeInsets.only(right: 12)),
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+                onPressed: () {
+                },
+                child: Row(
+                  children: [
+                    _buildThumbnailImage("https://i.pinimg.com/736x/83/8f/84/838f840d51db226a8a0cb79b962f24d5.jpg"),
+                    SizedBox(width: 15,),
+                    //const Padding(padding: EdgeInsets.only(right: 12)),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.35,
-                            child: Text(
-                              widget.user_name,
-                              style: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimaryContainer,
-                                fontSize: 20,
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.35,
+                                child: Text(
+                                  widget.user_name,
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
+                                    fontSize: 20,
+                                  ),
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                              softWrap: true,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+            
+                            ],
                           ),
-
+                        
                         ],
                       ),
-                    
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+            SizedBox(height: 5,),
+            Divider(
+              height: 1, // Высота разделителя, включая линию и пустое пространство над и под ней
+              thickness: 1, // Толщина линии разделителя
+              color: Colors.grey, // Цвет линии разделителя
+            ),
+          ],
         ),
-        actions: [
-          Container(
-            padding: const EdgeInsets.only(right: 12),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.more_vert_rounded,
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
-                  onPressed: () {
-                    // Действие при нажатии на кнопку
-                  },
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween, // Разделяет пространство между списком сообщений и панелью ввода
