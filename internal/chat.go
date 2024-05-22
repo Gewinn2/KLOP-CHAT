@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -156,4 +157,35 @@ func (s *Server) findChat(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, ChatId)
+}
+
+// Функция для возврата списка чатов по приоритетам
+func (s *Server) getChatsPriority(c *gin.Context) {
+	userIdToConv, ok := c.Get("userId")
+	if !ok {
+		c.String(http.StatusUnauthorized, "User ID not found")
+		fmt.Println("getChatsPriority:", ok)
+		return
+	}
+	userId := userIdToConv.(int)
+
+	AllUsersChats, err := database.GetAllChatByUserId(s.DB, userId)
+	if err != nil {
+		fmt.Println("getAllUsersChats:", err)
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	sort.Slice(AllUsersChats, func(i, j int) bool {
+		first, _ := database.GetAllMessages(s.DB, AllUsersChats[i].ChatId)
+
+		second, _ := database.GetAllMessages(s.DB, AllUsersChats[j].ChatId)
+
+		return len(first) > len(second)
+	})
+	if len(AllUsersChats) > 5 {
+		c.JSON(http.StatusOK, AllUsersChats[:5])
+	} else {
+		c.JSON(http.StatusOK, AllUsersChats)
+	}
 }
