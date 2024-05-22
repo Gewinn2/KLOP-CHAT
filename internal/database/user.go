@@ -11,9 +11,9 @@ import (
 func CreateUser(db *sql.DB, u User) (int, error) {
 	var userID int
 
-	err := db.QueryRow(`INSERT INTO users(username, email, password, photo, created_at)
-		VALUES ($1, $2, $3, $4, $5)
-		RETURNING user_id`, u.UserName, u.Email, u.Password, u.Photo, u.CreatedAt).Scan(&userID)
+	err := db.QueryRow(`INSERT INTO users(username, email, password, photo, user_role, last_activity, ban, created_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+		RETURNING user_id`, u.UserName, u.Email, u.Password, u.Photo, u.UserRole, u.LastActivity, u.Ban, u.CreatedAt).Scan(&userID)
 	if err != nil {
 		return 0, fmt.Errorf("DBCreateUser: %w", err)
 	}

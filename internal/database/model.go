@@ -1,12 +1,15 @@
 package database
 
 type User struct {
-	UserId    int    `json:"user_id"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
-	UserName  string `json:"username"`
-	Photo     string `json:"photo"`
-	CreatedAt string `json:"created_at"`
+	UserId       int    `json:"user_id"`
+	Email        string `json:"email"`
+	Password     string `json:"password"`
+	UserName     string `json:"username"`
+	Photo        string `json:"photo"`
+	UserRole     string `json:"user_role"`
+	LastActivity string `json:"last_activity"`
+	Ban          string `json:"ban"`
+	CreatedAt    string `json:"created_at"`
 }
 
 type Message struct {

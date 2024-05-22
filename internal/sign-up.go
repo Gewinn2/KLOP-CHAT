@@ -16,7 +16,10 @@ func (s *Server) HandleSignUp(c *gin.Context) {
 		return
 	}
 
-	user.CreatedAt = time.Now().Format("2006-01-02")
+	user.CreatedAt = time.Now().Format("2006-01-02 15:04")
+	user.LastActivity = time.Now().Format("2006-01-02 15:04")
+	user.Ban = "false"
+	user.UserRole = "user"
 
 	_, err := database.GetUserIdByUsername(s.DB, user.UserName)
 	if err == nil {
