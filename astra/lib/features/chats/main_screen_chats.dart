@@ -47,6 +47,13 @@ class _MainChatScreen extends State<MainChatScreen> {
     });
   }
 
+
+  void update_id(int a) {
+    setState(() {
+      _selectedUserIndex = a;
+    });
+  }
+
   // Заглушка для списка пользователей
   //final List<String> _users = ['Alice', 'Bob', 'Charlie', 'Diana','And','Pop','Wik',"Wed",'Marik','Andro','Pipa','Tata'];
 
@@ -82,12 +89,11 @@ class _MainChatScreen extends State<MainChatScreen> {
                   title: ChatBubble(
                     chatTitle: _users[index].name, 
                     imageUrl: 'https://img.freepik.com/free-photo/abstract-textured-backgound_1258-30627.jpg?size=338&ext=jpg&ga=GA1.1.44546679.1716163200&semt=ais_user', 
+                    last_mes: _users[index].content, 
                   ), //Text(_users[index])
                   selected: index == _selectedUserIndex,
                   onTap: () async{
-                    setState(() {
-                      _selectedUserIndex = index;
-                    });
+                    update_id(index);
                     setState(() {
                       flag_tab = true;
                     });

@@ -105,6 +105,8 @@ class _ChatPanelState extends State<ChatPanel> {
                                     color: Theme.of(context)
                                         .colorScheme
                                         .onPrimaryContainer,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w500,
                                     fontSize: 20,
                                   ),
                                   softWrap: true,
@@ -199,10 +201,12 @@ class _ChatPanelState extends State<ChatPanel> {
             itemCount: widget.message.length,
             itemBuilder: (context,index){
               //List<Message> h = widget.message;
+              print(widget.user.chat_id);
+              print(widget.message[index].user_id);
               return StructMessage(
                   message: widget.message[index].content,
                   id_who_send: widget.message[index].user_id,
-                  id_i: widget.user.chat_id,
+                  id_i: '3',  // сюда впишу номер чела которого мне вернут при входе в ак( айдишник)
                 );
             },
           ),
