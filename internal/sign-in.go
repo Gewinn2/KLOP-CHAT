@@ -10,6 +10,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+type signInResponse struct {
+	SignInUserId int    `json:"sign_in_user_id"`
+	Token        string `json:"token"`
+}
+
 func (s *Server) HandleSignIn(c *gin.Context) {
 	var user database.User
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -42,5 +47,9 @@ func (s *Server) HandleSignIn(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, token)
+	var response signInResponse
+	response.SignInUserId = foundUser.UserId
+	response.Token = token
+
+	c.JSON(http.StatusOK, response)
 }

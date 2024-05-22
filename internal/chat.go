@@ -4,6 +4,7 @@ import (
 	"Astra_Linux_chat/internal/database"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"math/rand"
 	"net/http"
 	"sort"
 	"strconv"
@@ -43,14 +44,14 @@ func (s *Server) createChat(c *gin.Context) {
 	full.UserIdArr = append(full.UserIdArr, userId)
 
 	var result createChatResult
-	
+
 	rand.Seed(time.Now().UnixNano())
-	colors := []string{"https://images.app.goo.gl/nXB9xCGPQXp1WAaR6", "https://images.app.goo.gl/HCwpsUom368AMP6RA", 
-	"https://images.app.goo.gl/Rz9McvBXmyLbgZc59", "https://images.app.goo.gl/Q2kwvCjMdYEVMjcX6", "https://images.app.goo.gl/9efoY52cXtYwZzEN9",
-	"https://images.app.goo.gl/sjfRcq96ypQ4yhqQ7", "https://images.app.goo.gl/NYUzDxHHfVkovkKS8", "https://images.app.goo.gl/APgjWqDgcEBXpSnT9", 
-	"https://images.app.goo.gl/mp7eUs5F94trFge5A", "https://images.app.goo.gl/zqwTYw5Lo14FKs7w8", "https://images.app.goo.gl/44pDJPCcdvMDe7oG9"}
+	colors := []string{"https://images.app.goo.gl/nXB9xCGPQXp1WAaR6", "https://images.app.goo.gl/HCwpsUom368AMP6RA",
+		"https://images.app.goo.gl/Rz9McvBXmyLbgZc59", "https://images.app.goo.gl/Q2kwvCjMdYEVMjcX6", "https://images.app.goo.gl/9efoY52cXtYwZzEN9",
+		"https://images.app.goo.gl/sjfRcq96ypQ4yhqQ7", "https://images.app.goo.gl/NYUzDxHHfVkovkKS8", "https://images.app.goo.gl/APgjWqDgcEBXpSnT9",
+		"https://images.app.goo.gl/mp7eUs5F94trFge5A", "https://images.app.goo.gl/zqwTYw5Lo14FKs7w8", "https://images.app.goo.gl/44pDJPCcdvMDe7oG9"}
 	colorChat := colors[rand.Intn(11)]
-	
+
 	var chat database.Chat
 	chat.Name = full.Name
 	chat.Photo = colorChat

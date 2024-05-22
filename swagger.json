@@ -64,7 +64,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserAuth"
+                  "type": "object",
+                  "properties": {
+                    "sign_in_user_id": {
+                      "type": "integer"
+                    },
+                    "ptoken": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
