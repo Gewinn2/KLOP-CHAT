@@ -205,13 +205,11 @@
                     "type": "string",
                     "example": "https://www.zastavki.com/pictures/originals/2018Animals___Cats_Large_gray_cat_with_a_surprised_look_123712_.jpg"
                   },
-                  "user_id_arr": {
+                  "username_arr": {
                     "type": "array",
                     "items": {
-                      "type": "integer",
-                      "example": 1
-                    },
-                    "example": [2, 3]
+                      "type": "string"
+                    }
                   }
                 }
               }
