@@ -167,6 +167,7 @@ func (s *Server) deleteChat(c *gin.Context) {
 
 // Функция для поиска чатов
 func (s *Server) findChat(c *gin.Context) {
+
 	name := c.Query("name")
 	if name == "" {
 		c.String(http.StatusUnauthorized, "Chat ID not found")
@@ -174,14 +175,14 @@ func (s *Server) findChat(c *gin.Context) {
 		return
 	}
 
-	ChatId, err := database.FindChatByName(s.DB, name)
+	chat, err := database.FindChatById(s.DB, name)
 	if err != nil {
 		fmt.Println("findChat", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, ChatId)
+	c.JSON(http.StatusOK, chat)
 }
 
 // Функция для возврата списка чатов по приоритетам
