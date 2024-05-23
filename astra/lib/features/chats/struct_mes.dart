@@ -39,7 +39,7 @@ class StructMessage extends StatelessWidget {
     Alignment messageAlignment = isSentByMe ? Alignment.centerRight : Alignment.centerLeft;
 
     // Выбираем цвет в зависимости от отправителя
-    Color messageColor = isSentByMe ? Colors.pink : Colors.purple;
+    Color messageColor = isSentByMe ? Color.fromRGBO(59, 3, 102, 1) : Color.fromRGBO(230, 206, 241, 1);
 
     String dateTimeString = time1;
     DateTime dateTime = DateTime.parse(dateTimeString);
@@ -53,7 +53,8 @@ class StructMessage extends StatelessWidget {
         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.8), // Максимальная ширина сообщения
         decoration: BoxDecoration(
           color: messageColor, // Цвет фона сообщения
-          borderRadius: BorderRadius.circular(8.0), // Скругление углов
+          borderRadius: isSentByMe? BorderRadius.only(topLeft:Radius.circular(16),topRight: Radius.circular(16),bottomLeft: Radius.circular(16),bottomRight: Radius.circular(4))
+          :BorderRadius.only(topLeft:Radius.circular(16),topRight: Radius.circular(16),bottomLeft: Radius.circular(4),bottomRight: Radius.circular(16)), // Скругление углов
         ),
         child: Column(
           children: [
@@ -62,16 +63,17 @@ class StructMessage extends StatelessWidget {
               style: TextStyle(
                 color: Colors.white,
                 fontFamily: 'Inter',
-                fontSize: 16,
+                fontSize: 20,
                 fontWeight:FontWeight.w500,
                 ), // Цвет текста
             ),
             Text(
               time,
+              textAlign: isSentByMe? TextAlign.right : TextAlign.left ,
               style: TextStyle(
                 color: Colors.white,
                 fontFamily: 'Inter',
-                fontSize: 12,
+                fontSize: 14,
                 fontWeight:FontWeight.w500,
                 ), 
             )

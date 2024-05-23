@@ -19,6 +19,7 @@ class _MainChatScreen extends State<MainChatScreen> {
   List<User> _users_important = [];
   String jwt = "";
   String user_id = "";
+  String user_name = "";
 
   @override
   void didChangeDependencies() {
@@ -30,6 +31,7 @@ class _MainChatScreen extends State<MainChatScreen> {
     jwt = help[1] as String;
     user_id = help[2] as String;
     _users_important = help[3] as List<User>;
+    user_name = help[4] as String;
     // user_name =
     //     help["name"] as String?; // Присваивание значения переменной user_name
     // image_url = help["url"] as String?;
@@ -66,6 +68,12 @@ class _MainChatScreen extends State<MainChatScreen> {
     });
   }
 
+  final TextEditingController _msgController = TextEditingController();
+  late User us;
+  bool flag = false;
+
+
+
   // Заглушка для списка пользователей
   //final List<String> _users = ['Alice', 'Bob', 'Charlie', 'Diana','And','Pop','Wik',"Wed",'Marik','Andro','Pipa','Tata'];
 
@@ -77,9 +85,13 @@ class _MainChatScreen extends State<MainChatScreen> {
     return Scaffold(
       appBar: AppBar(   
         //automaticallyImplyLeading: false, 
+         iconTheme: IconThemeData(
+          color: Color.fromRGBO(59, 3, 102, 1), // Установите нужный цвет стрелочки здесь
+        ),
+        toolbarHeight: 80.0,
         title:  Row(
           children: [
-            SizedBox(height: 20,width: 20,),
+            SizedBox(width: 10),
             Text(
               "Klop Chat",
               style: TextStyle( 
@@ -89,6 +101,7 @@ class _MainChatScreen extends State<MainChatScreen> {
                 fontWeight: FontWeight.w700,
               )
               ),
+              SizedBox(width: 60,),
               ElevatedButton(
                 onPressed: () async {
                   List<String> help = await addChat(context);
@@ -112,7 +125,7 @@ class _MainChatScreen extends State<MainChatScreen> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
+                  backgroundColor: Color.fromRGBO(164, 128, 222, 1),
                   shape: const CircleBorder(),
                   padding: const EdgeInsets.all(20),
                   elevation: 0, // Убираем тень
@@ -130,7 +143,59 @@ class _MainChatScreen extends State<MainChatScreen> {
             child: Column(
               children: [
                 SizedBox(height: 10,),
-                Text(
+                Container(
+                  width: 350, // Ширина контейнера
+                  height: 40, // Высота контейнера
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0), // Уменьшенные отступы
+                  decoration: BoxDecoration(
+                    color: Color.fromRGBO(230, 206, 241, 1), // Фиолетовый цвет фона
+                    borderRadius: BorderRadius.circular(10.0), // Сглаживание краев
+                  ),
+                  alignment: Alignment.center, // Центрирование текста по вертикали и горизонтали
+                  child: Text(
+                    user_name,
+                    style: TextStyle(
+                      color: Color.fromRGBO(31, 2, 53, 1), // Цвет текста
+                      fontSize: 24, // Размер шрифта
+                    ),
+                    overflow: TextOverflow.ellipsis, // Троеточие, если текст не помещается
+                  ),
+                ),
+                SizedBox(height: 15,),
+                Expanded(
+                child: TextField(
+                  controller: _msgController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.onInverseSurface,
+                    hintText: "Введите название чата",
+                    prefixIcon: IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: () async {
+                        try{
+                          us = await getUser_by_name(jwt,_msgController.text);
+                          setState(() {
+                            flag = true;
+                          });
+                        }catch(e){
+                          print(e);
+                        }
+                      },
+                    ), // Иконка лупы теперь в виде кнопки
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              flag?ChatBubble(imageUrl: us.photo, chatTitle: us.name, last_mes: us.message_created_at) : Container(),
+
+
+                //SizedBox(height: 10,),
+                !(_users_important.length == 0)?Text(
                   'Рекомендованные чаты',
                   style: TextStyle( 
                       color: Color.fromRGBO(59, 3, 102, 1),
@@ -138,9 +203,16 @@ class _MainChatScreen extends State<MainChatScreen> {
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w700,
                     ),
-                ),
+                ) : Container(),
                 SizedBox(height: 10,),
-                Flexible(
+                (_users_important.length == 0)? Text('Добавьте чаты',
+                style: TextStyle( 
+                      color: Color.fromRGBO(59, 3, 102, 1),
+                      fontSize: 22,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w700,
+                    ),)
+                :Flexible(
                   child: ListView.builder(
                     itemCount: _users_important.length,
                     itemBuilder: (context, index) {
@@ -171,7 +243,7 @@ class _MainChatScreen extends State<MainChatScreen> {
                   ),
                 ),
                 //SizedBox(height: 10,),
-                const Text(
+                !(_users_important.length == 0)?const Text(
                   'Все чаты',
                   style: TextStyle( 
                       color: Color.fromRGBO(59, 3, 102, 1),
@@ -179,9 +251,9 @@ class _MainChatScreen extends State<MainChatScreen> {
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w700,
                     ),
-                ),
+                ): Container(),
                 SizedBox(height: 10,),
-                Flexible(
+                !(_users.length == 0)?Flexible(
                   child: ListView.builder(
                     itemCount: _users.length,
                     itemBuilder: (context, index) {
@@ -210,7 +282,7 @@ class _MainChatScreen extends State<MainChatScreen> {
                       );
                     },
                   ),
-                ),
+                ) : Container(),
               ],
             ),
           ),

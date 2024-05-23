@@ -10,7 +10,7 @@ Future<http.Response> post_sign_in(
     Uri(
       scheme: 'http',
       host: 'localhost',
-      port: 8080,
+      port: 5050,
       path: '/sign-in',
     ),
     headers: {
@@ -40,7 +40,7 @@ Future<http.Response> post_sign_up(
     Uri(
       scheme: 'http',
       host: 'localhost',
-      port: 8080,
+      port: 5050,
       path: '/sign-up',
     ),
     headers: {
@@ -89,7 +89,7 @@ Future<List<User>> getUser(String jwtToken) async {
     Uri(
       scheme: 'http',
       host: 'localhost',
-      port: 8080,
+      port: 5050,
       path: '/auth/chat',
     ),
     headers: {
@@ -99,6 +99,7 @@ Future<List<User>> getUser(String jwtToken) async {
   if (response.statusCode == 200) {
     final dynamic decodedData = json.decode(response.body);
     print(decodedData);
+    if (decodedData == [0]) {return [];}
     List<User> newsList = [];
     final List<dynamic> jsonList = decodedData as List;
     // final dynamic hi = jsonList[0];
@@ -180,7 +181,7 @@ Future<http.Response> post_message(
     Uri(
       scheme: 'http',
       host: 'localhost',
-      port: 8080,
+      port: 5050,
       path: '/auth/message',
     ),
     headers: {
@@ -214,7 +215,7 @@ Future<List<Message>> getMessage(String jwtToken,String id) async {
     Uri(
       scheme: 'http',
       host: 'localhost',
-      port: 8080,
+      port: 5050,
       path: '/auth/message',
       queryParameters: {'id': id},
     ),
@@ -245,6 +246,29 @@ Future<List<Message>> getMessage(String jwtToken,String id) async {
   }
 }
 
+Future<String> getUser_by_id(String jwtToken,String id) async {
+  final response = await http.get(
+    Uri(
+      scheme: 'http',
+      host: 'localhost',
+      port: 5050,
+      path: '/user',
+      queryParameters: {'id': id},
+    ),
+    headers: {
+      'Authorization': 'Bearer $jwtToken',
+    },
+  );
+  if (response.statusCode == 200) {
+    final dynamic decodedData = json.decode(response.body);
+    print(decodedData);
+    String name = decodedData['username'].toString();
+    return name;
+  } else {
+    throw Exception(response.statusCode);
+  }
+}
+
 
 // {
 //   "name": "GR2",
@@ -269,7 +293,7 @@ Future<http.Response> create_chat(
     Uri(
       scheme: 'http',
       host: 'localhost',
-      port: 8080,
+      port: 5050,
       path: '/auth/chat',
     ),
     headers: {
@@ -281,4 +305,36 @@ Future<http.Response> create_chat(
       'username_arr': user_id_arr,
     }),
   );
+}
+
+
+
+Future<User> getUser_by_name(String jwtToken,String name) async {
+  final response = await http.get(
+    Uri(
+      scheme: 'http',
+      host: 'localhost',
+      port: 5050,
+      path: '/user',
+      queryParameters: {'id': name},
+    ),
+    headers: {
+      'Authorization': 'Bearer $jwtToken',
+    },
+  );
+  if (response.statusCode == 200) {
+    final dynamic decodedData = json.decode(response.body);
+    print(decodedData);
+    User newsList = User(
+        chat_id: decodedData['chat_id'].toString(), 
+        name: decodedData['name'], 
+        photo: decodedData['photo'], 
+        content: decodedData['content'], 
+        message_created_at: decodedData['message_created_at'],
+        
+      );
+    return newsList;
+  } else {
+    throw Exception(response.statusCode);
+  }
 }

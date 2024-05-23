@@ -218,12 +218,6 @@ class _ChatPanelState extends State<ChatPanel> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {
-                      // Действие при нажатии на кнопку прикрепления файла
-                    },
-                    icon: const Icon(Icons.attach_file_outlined),
-                  ),
-                  IconButton(
                     onPressed: () async {
                         String content = _msgController.text;
 

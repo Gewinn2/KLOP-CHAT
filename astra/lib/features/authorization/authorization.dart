@@ -122,22 +122,26 @@ class _AuthorizationState extends State<Authorization> {
                         // String password = 'qwerty1234'; // Замените на актуальный пароль
                         email = loginController.text;
                         password = _passwordController.text;
-
+                        String token='';
+                        String userId = '';
+                        List<User> users = [];
+                        List<User> users_import = [];
                         try {
                           final response = await post_sign_in(email, password);
                           if (response.statusCode == 200) {
                             final data = jsonDecode(response.body); 
-                            String token = data['token'];
-                            String userId = data['sign_in_user_id'].toString();
+                            token = data['token'];
+                            userId = data['sign_in_user_id'].toString();
                           
-                            List<User>? users = await getUser(token);
+                            List<User> users = await getUser(token);
                             print(users);
-                            List<User>? users_import = await getImportantUser(token);
+                             users_import = await getImportantUser(token);
+                            String name = await getUser_by_id(token, userId);
                           
                             Navigator.pushNamed(
                               context, 
                               'main_screen_chat',
-                              arguments: [users,token,userId,users_import],
+                              arguments: [users,token,userId,users_import,name],
                             );
                           } else {
                             // Обработка ошибки
@@ -146,7 +150,13 @@ class _AuthorizationState extends State<Authorization> {
                         } catch (e) {
                           // Обработка исключения при отправке запроса
                           print('Исключение при отправке запроса: $e');
+                          Navigator.pushNamed(
+                              context, 
+                              'main_screen_chat',
+                              arguments: [users,token,userId,users_import],
+                            );
                         }
+                        
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(59, 3, 102, 1)), // Фоновый цвет кнопки
