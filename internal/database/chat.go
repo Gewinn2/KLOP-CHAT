@@ -115,5 +115,14 @@ func FindChatByName(db *sql.DB, name string) (Chat, error) {
 			return chat, fmt.Errorf("DBFindChatByName: %w", err)
 		}
 	}
+	message, err := GetLatestMessages(db, chatId)
+		if err != nil {
+			fmt.Println("DBFindChatByName:", err)
+		}
+		result.ChatId = chat.ChatId
+		result.Name = chat.Name
+		result.Photo = chat.Photo
+		result.Content = message.Content
+		result.CreatedAt = message.CreatedAt
 	return chat, nil
 }
