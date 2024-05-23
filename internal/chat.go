@@ -12,9 +12,9 @@ import (
 )
 
 type fullCreateChat struct {
-	Name      string `json:"name"`
-	Photo     string `json:"photo"`
-	UserIdArr []int  `json:"user_id_arr"`
+	Name        string   `json:"name"`
+	Photo       string   `json:"photo"`
+	UsernameArr []string `json:"username_arr"`
 }
 
 type createChatResult struct {
@@ -41,7 +41,8 @@ func (s *Server) createChat(c *gin.Context) {
 		return
 	}
 
-	full.UserIdArr = append(full.UserIdArr, userId)
+	var UserIdArr []int
+	UserIdArr = append(UserIdArr, userId)
 
 	var result createChatResult
 
@@ -66,8 +67,18 @@ func (s *Server) createChat(c *gin.Context) {
 	result.Photo = colorChat
 	result.ChatId = chatId
 
-	for i := range full.UserIdArr {
-		participantId, err := database.AddChatParticipant(s.DB, chatId, full.UserIdArr[i])
+	for i := range full.UsernameArr {
+		user, err := database.GetUserIdByUsername(s.DB, full.UsernameArr[i])
+		if err != nil {
+			fmt.Println("createChat:", err)
+			c.JSON(http.StatusInternalServerError, err)
+			return
+		}
+		UserIdArr = append(UserIdArr, user.UserId)
+	}
+
+	for i := range full.UsernameArr {
+		participantId, err := database.AddChatParticipant(s.DB, chatId, UserIdArr[i])
 		if err != nil {
 			fmt.Println("createChat:", err)
 			c.JSON(http.StatusInternalServerError, err)
