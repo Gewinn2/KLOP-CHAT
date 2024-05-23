@@ -100,8 +100,8 @@ func DeleteChatById(db *sql.DB, id int) error {
 }
 
 // Функция для поиска чатов
-func FindChatByName(db *sql.DB, name string) (Chat, error) {
-	var chat Chat
+func FindChatByName(db *sql.DB, name string) (GetAllChatByUserIdResult, error) {
+	var chat GetAllChatByUserIdResult
 	rows, err := db.Query(`SELECT * FROM chats WHERE name =  = $1`, name)
 	if err != nil {
 		return chat, fmt.Errorf("DBFindChatByName: %w", err)
@@ -109,13 +109,15 @@ func FindChatByName(db *sql.DB, name string) (Chat, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var chat Chat
+		var chat GetAllChatByUserIdResult
 		err = rows.Scan(&chat.ChatId, &chat.Name, &chat.Photo, &chat.CreatedAt)
 		if err != nil {
 			return chat, fmt.Errorf("DBFindChatByName: %w", err)
 		}
 	}
-	message, err := GetLatestMessages(db, chatId)
+	var result GetAllChatByUserIdResult
+	message, err := GetLatestMessages(db, chat.ChatId)
+		
 		if err != nil {
 			fmt.Println("DBFindChatByName:", err)
 		}
@@ -124,5 +126,5 @@ func FindChatByName(db *sql.DB, name string) (Chat, error) {
 		result.Photo = chat.Photo
 		result.Content = message.Content
 		result.CreatedAt = message.CreatedAt
-	return chat, nil
+	return result, nil
 }
