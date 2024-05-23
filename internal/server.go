@@ -56,22 +56,11 @@ func (s *Server) Start() error {
 	}
 
 	// Запуск сервера
-	go func() {
-		err := http.Serve(s.listener, router)
-		if err != nil {
-			fmt.Println("Error starting server:", err)
-		}
-	}()
-
-	// Прием tcp соединений
-	for {
-		conn, err := s.listener.Accept()
-		if err != nil {
-			fmt.Println("Error accepting TCP connection:", err)
-			continue
-		}
-		go s.handleConnection(conn)
+	if err := http.Serve(s.listener, router); err != nil {
+		fmt.Println("Error starting server:", err)
+		return err
 	}
+	return nil
 }
 
 func (s *Server) hello(c *gin.Context) {

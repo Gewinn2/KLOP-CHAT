@@ -16,8 +16,8 @@ func (s *Server) HandleSignUp(c *gin.Context) {
 		return
 	}
 
-	user.CreatedAt = time.Now().Format("2006-01-02 15:04")
-	user.LastActivity = time.Now().Format("2006-01-02 15:04")
+	user.CreatedAt = time.Now().In(time.FixedZone("UTC+3", 3*60*60)).Format("2006-01-02 15:04")
+	user.LastActivity = time.Now().In(time.FixedZone("UTC+3", 3*60*60)).Format("2006-01-02 15:04")
 	user.Ban = "false"
 	user.UserRole = "user"
 
