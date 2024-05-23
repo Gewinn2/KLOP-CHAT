@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"time"
 )
 
 // CreateUser создает нового пользователя
@@ -91,17 +92,18 @@ func DeleteUserById(db *sql.DB, id int) error {
 
 	return nil
 }
+
 // UpdateLastActivity обновляет время последней активности
 func (u *User) UpdateLastActivity(db *sql.DB) error {
-    // Обновляем время последней активности в структуре пользователя
-    u.LastActivity = time.Now().Format(time.RFC3339)
+	// Обновляем время последней активности в структуре пользователя
+	u.LastActivity = time.Now().Format(time.RFC3339)
 
-    // Обновляем время последней активности в базе данных
-    _, err := db.Exec(`UPDATE users SET last_activity = $1 WHERE user_id = $2`, u.LastActivity, u.UserId)
+	// Обновляем время последней активности в базе данных
+	_, err := db.Exec(`UPDATE users SET last_activity = $1 WHERE user_id = $2`, u.LastActivity, u.UserId)
 
-    if err != nil {
-        return fmt.Errorf("UpdateLastActivity: %w", err)
-    }
+	if err != nil {
+		return fmt.Errorf("UpdateLastActivity: %w", err)
+	}
 
-    return nil
+	return nil
 }
