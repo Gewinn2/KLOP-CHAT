@@ -175,7 +175,7 @@ func (s *Server) findChat(c *gin.Context) {
 		return
 	}
 
-	chat, err := database.FindChatById(s.DB, name)
+	chat, err := database.FindChatByName(s.DB, name)
 	if err != nil {
 		fmt.Println("findChat", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
