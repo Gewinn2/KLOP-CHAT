@@ -47,6 +47,7 @@ func (s *Server) Start() error {
 		authGroup.POST("chat", s.createChat)
 		authGroup.PUT("chat", s.updateChat)
 		authGroup.DELETE("chat", s.deleteChat)
+		authGroup.GET("chat/find", s.findChat)
 
 		authGroup.GET("message", s.getAllChatsMessages)
 		authGroup.POST("message", s.createMessage)
