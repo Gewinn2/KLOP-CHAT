@@ -315,7 +315,7 @@ Future<User> getUser_by_name(String jwtToken,String name) async {
       scheme: 'http',
       host: 'localhost',
       port: 5050,
-      path: '/user',
+      path: '/auth/chat/find',
       queryParameters: {'id': name},
     ),
     headers: {

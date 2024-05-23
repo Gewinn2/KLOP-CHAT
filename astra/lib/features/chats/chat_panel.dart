@@ -78,7 +78,7 @@ class _ChatPanelState extends State<ChatPanel> {
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 100), (timer) async {
+    _timer = Timer.periodic(Duration(milliseconds: 20), (timer) async {
       // Вызываем функцию getMessage каждые 10 секунд
       List<Message> help = await getMessage(widget.jwt, widget.user.chat_id);
       update(help);
