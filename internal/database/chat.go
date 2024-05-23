@@ -100,21 +100,20 @@ func DeleteChatById(db *sql.DB, id int) error {
 }
 
 // Функция для поиска чатов
-func FindChatByName(db *sql.DB, name string) ([]int, error) {
-	var chatIdArr []int
-	rows, err := db.Query(`SELECT chat_id FROM chats WHERE name = $1`, name)
+func FindChatByName(db *sql.DB, name string) (Chat, error) {
+	var chat Chat
+	rows, err := db.Query(`SELECT * FROM chats WHERE name =  = $1`, name)
 	if err != nil {
-		return chatIdArr, fmt.Errorf("DBFindChatByName: %w", err)
+		return chat, fmt.Errorf("DBFindChatByName: %w", err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
 		var chat Chat
-		err = rows.Scan(&chat.ChatId)
+		err = rows.Scan(&chat.ChatId, &chat.Name, &chat.Photo, &chat.CreatedAt)
 		if err != nil {
-			return chatIdArr, fmt.Errorf("DBFindChatByName: %w", err)
+			return chat, fmt.Errorf("DBFindChatByName: %w", err)
 		}
-		chatIdArr = append(chatIdArr, chat.ChatId)
 	}
-	return chatIdArr, nil
+	return chat, nil
 }
