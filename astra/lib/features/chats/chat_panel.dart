@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:astra/features/chats/struct_mes.dart';
 import 'package:astra/repo/repo_post.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +10,9 @@ class ChatPanel extends StatefulWidget {
   final String jwt;
   List<Message>message;
   final bool flag;
+  final String user_id_tot_sami;
 
-  ChatPanel({super.key, required this.user,required this.jwt,required this.message, required this.flag});
+  ChatPanel({super.key, required this.user,required this.jwt,required this.message, required this.flag, required this.user_id_tot_sami});
 
   @override
   _ChatPanelState createState() => _ChatPanelState();
@@ -56,6 +59,31 @@ class _ChatPanelState extends State<ChatPanel> {
   void update(List<Message> a) {
     setState(() {
       widget.message = a;
+    });
+  }
+
+   Timer? _timer; // Добавляем переменную для таймера
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer(); // Запускаем таймер при создании виджета
+    // ... ваш код 
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel(); // Останавливаем таймер при удалении виджета
+    super.dispose();
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 100), (timer) async {
+      // Вызываем функцию getMessage каждые 10 секунд
+      List<Message> help = await getMessage(widget.jwt, widget.user.chat_id);
+      update(help);
+      // ... ваш код для обработки данных help 
+      setState(() {}); // Обновляем состояние виджета, чтобы изменения отобразились
     });
   }
 
@@ -136,77 +164,19 @@ class _ChatPanelState extends State<ChatPanel> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween, // Разделяет пространство между списком сообщений и панелью ввода
         children: [
-        //   Column(
-        //   children: [
-        //     Expanded(
-        //       child: ListView.builder(
-        //         itemCount: widget.message.length,
-        //         itemBuilder: (context, index) {
-        //           //final message = widget.message[index].content;
-        //           print(widget.user.chat_id);
-        //           print(widget.message[index].user_id);
-        //           // return StructMessage(
-        //           //   message: widget.message[index].content,
-        //           //   id_who_send: widget.message[index].user_id,
-        //           //   id_i: widget.user.chat_id,
-        //           // );
-        //           return Text(widget.message[index].content);
-        //         },
-        //       ),
-        //     ),
-        //   ],
-        // ),
         !widget.flag? Text("Нажми на чат") 
-        // :   Column(
-        //   children: [
-        //     ListView.builder(
-        //       itemCount: widget.message.length,
-        //       itemBuilder: (context, index) {
-        //         //final message = widget.message[index].content;
-        //         print(widget.user.chat_id);
-        //         print(widget.message[index].user_id);
-        //         // return StructMessage(
-        //         //   message: widget.message[index].content,
-        //         //   id_who_send: widget.message[index].user_id,
-        //         //   id_i: widget.user.chat_id,
-        //         // );
-        //         return Text(widget.message[index].content);
-        //         //return Text("gaga");
-        //       },
-        //     ),
-        //   ],
-        // ),
-        //:Text(widget.message.length.toString()),
-        // :ListView.builder(
-        //   itemCount: widget.message.length, 
-        //   itemBuilder: (context, index) {
-        //     var message = widget.message[index];
-        //     return ListTile(
-        //       title: Text(message.content), 
-        //     );
-        //   },
-        // ),
-        // Expanded(
-        //     flex: 3, // Занимает 1/4 пространства
-        //     child: ListView.builder(
-        //       itemCount: _users.length,
-        //       itemBuilder: (context, index) {
-        //         return ListTile(
-        //           title: ChatBubble(
-        //             chatTitle: _users[index].name, 
-        //             imageUrl: 'https://img.freepik.com/free-photo/abstract-textured-backgound_1258-30627.jpg?size=338&ext=jpg&ga=GA1.1.44546679.1716163200&semt=ais_user', 
-        //           ), //Text(_users[index])
         :Expanded( 
           child: ListView.builder(
             itemCount: widget.message.length,
             itemBuilder: (context,index){
               //List<Message> h = widget.message;
-              print(widget.user.chat_id);
+              print("--------------------");
               print(widget.message[index].user_id);
+              print(widget.user_id_tot_sami);
               return StructMessage(
                   message: widget.message[index].content,
                   id_who_send: widget.message[index].user_id,
-                  id_i: '3',  // сюда впишу номер чела которого мне вернут при входе в ак( айдишник)
+                  id_i: widget.user_id_tot_sami,  // сюда впишу номер чела которого мне вернут при входе в ак( айдишник)
                 );
             },
           ),
@@ -278,7 +248,9 @@ class _ChatPanelState extends State<ChatPanel> {
                           // Обработка исключения при отправке запроса
                         print('Исключение при отправке запроса: $e');
                     }
+                    _startTimer();
                       },
+                    
                     icon: const Icon(Icons.send),
                   ),
                 ],

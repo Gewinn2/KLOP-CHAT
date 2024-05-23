@@ -126,26 +126,17 @@ class _AuthorizationState extends State<Authorization> {
                         try {
                           final response = await post_sign_in(email, password);
                           if (response.statusCode == 200) {
-                          String body = response.body;
-                          String jwt = '';
-
-                          // Убедитесь, что тело ответа не пустое
-                          if (body.isNotEmpty) {
-                            // Удаление кавычек в начале и конце строки, если они есть
-                            String token = body.replaceAll('"', '');
-                            jwt = token;
-
-                            // Теперь переменная token содержит ваш JWT токен в виде String
-                            print('JWT Token: $token');
-                          }
+                            final data = jsonDecode(response.body); 
+                            String token = data['token'];
+                            String userId = data['sign_in_user_id'].toString();
                           
-                          List<User>? users = await getUser(jwt);
-                          print(users);
+                            List<User>? users = await getUser(token);
+                            print(users);
                           
                             Navigator.pushNamed(
                               context, 
                               'main_screen_chat',
-                              arguments: [users,jwt],
+                              arguments: [users,token,userId],
                             );
                           } else {
                             // Обработка ошибки

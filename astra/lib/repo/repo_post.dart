@@ -199,8 +199,8 @@ Future<List<Message>> getMessage(String jwtToken,String id) async {
           
         message_id: json['message_id'].toString(),
         content: json['content'],
-       user_id: json['user_id'].toString(),
-       chat_id: json['chat_id'].toString(),
+       user_id: json['chat_id'].toString(),
+       chat_id: json['user_id'].toString(),
        created_at: json['created_at']
       );
     }).toList();
@@ -208,4 +208,43 @@ Future<List<Message>> getMessage(String jwtToken,String id) async {
   } else {
     throw Exception(response.statusCode);
   }
+}
+
+
+// {
+//   "name": "GR2",
+//   "photo": "https://www.zastavki.com/pictures/originals/2018Animals___Cats_Large_gray_cat_with_a_surprised_look_123712_.jpg",
+//   "user_id_arr": [
+//     3
+//   ]
+// }
+
+Future<http.Response> create_chat(
+  String chat_name,
+  String photo,
+  List<String> user_id_arr,
+  String jwtToken,
+  //String photo,
+) async {
+  // Используя int.parse (будет исключение, если строка не является числом)
+List<int> numbers = user_id_arr.map((str) => int.parse(str)).toList();
+
+
+
+  return http.post(
+    Uri(
+      scheme: 'http',
+      host: 'localhost',
+      port: 5050,
+      path: '/auth/chat',
+    ),
+    headers: {
+      'Authorization': 'Bearer $jwtToken',
+    },
+    body: jsonEncode({
+      'name' : chat_name,
+      'photo' : photo,
+      'user_id_arr': numbers,
+    }),
+  );
 }

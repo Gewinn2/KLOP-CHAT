@@ -1,3 +1,4 @@
+import 'package:astra/features/chats/add_chat.dart';
 import 'package:astra/features/chats/chat_panel.dart';
 import 'package:astra/features/chats/struct_people.dart';
 import 'package:astra/repo/repo_post.dart';
@@ -15,6 +16,7 @@ class _MainChatScreen extends State<MainChatScreen> {
 
   List<User> _users = [];
   String jwt = "";
+  String user_id = "";
 
   @override
   void didChangeDependencies() {
@@ -24,6 +26,7 @@ class _MainChatScreen extends State<MainChatScreen> {
     List<Object> help = args as List<Object>;
     _users = help[0] as List<User>;
     jwt = help[1] as String;
+    user_id = help[2] as String;
     // user_name =
     //     help["name"] as String?; // Присваивание значения переменной user_name
     // image_url = help["url"] as String?;
@@ -47,6 +50,12 @@ class _MainChatScreen extends State<MainChatScreen> {
     });
   }
 
+  void update_user(List<User>a){
+    setState(() {
+      _users = a;
+    });
+  }
+
 
   void update_id(int a) {
     setState(() {
@@ -59,10 +68,13 @@ class _MainChatScreen extends State<MainChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String chatName;
+    String url;
+    String user_id_str;
     return Scaffold(
       appBar: AppBar(   
         //automaticallyImplyLeading: false, 
-        title: const Column(
+        title:  Row(
           children: [
             SizedBox(height: 20,width: 20,),
             Text(
@@ -73,6 +85,36 @@ class _MainChatScreen extends State<MainChatScreen> {
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w700,
               )
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  List<String> help = await addChat(context);
+                  chatName = help[0];
+                  url = help[1];
+                  user_id_str = help[2];
+                  List<String> user_id = user_id_str.split(' ');
+                  print("Chat name: $chatName");
+                  try{
+                    final response = await create_chat(chatName,url,user_id,jwt);
+                          if (response.statusCode == 200) {
+                            print("создана группа");
+                          } else {
+                            // Обработка ошибки
+                            print('Ошибка: ${response.statusCode}');
+                          }
+                          List<User> users = await getUser(jwt);
+                          update_user(users);
+                  }catch(e){
+                    print("оширбка в создании чаата $e" );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple,
+                  shape: const CircleBorder(),
+                  padding: const EdgeInsets.all(20),
+                  elevation: 0, // Убираем тень
+                ),
+                child: const Icon(Icons.add, color: Colors.white), // Плюсик
               ),
           ],
         ),
@@ -119,7 +161,7 @@ class _MainChatScreen extends State<MainChatScreen> {
           // Панель чата
           Expanded(
             flex: 8, // Занимает 3/4 пространства
-            child: ChatPanel(user: _users[_selectedUserIndex],jwt: jwt,message: message, flag: flag_tab,),
+            child: ChatPanel(user: _users[_selectedUserIndex],jwt: jwt,message: message, flag: flag_tab, user_id_tot_sami: user_id,),
           ),
         ],
       ),
