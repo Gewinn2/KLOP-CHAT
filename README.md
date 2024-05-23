@@ -5,5 +5,5 @@
 ### Разработчики:
 - <img src="https://avatars.githubusercontent.com/artificial00" alt="artificial00" width="25"/> design, backend - Ермолина Софья ([artificial00](https://github.com/artificial00))
 - <img src="https://avatars.githubusercontent.com/Gewinn2" alt="Gewinn2" width="25"/> backend - Постников Даниил ([Gewinn2](https://github.com/Gewinn2))
-- <img src="https://avatars.githubusercontent.com/ptmff" alt="ptmff" width="25"/> ml/backend - Павленко Тимофей ([ptmff](https://github.com/ptmff))
+- <img src="https://avatars.githubusercontent.com/ptmff" alt="ptmff" width="25"/> ml, backend - Павленко Тимофей ([ptmff](https://github.com/ptmff))
 - <img src="https://avatars.githubusercontent.com/Denis-Mist" alt="Denis-Mist" width="25"/> frontend - Дмитрив Денис ([Denis-Mist](https://github.com/Denis-Mist))
