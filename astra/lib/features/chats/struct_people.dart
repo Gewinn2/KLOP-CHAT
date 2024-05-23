@@ -32,7 +32,7 @@ class _ChatBubble extends State<ChatBubble> {
             return CircleAvatar(
               radius: 32,
               backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              child: const Text('A'),
+              child: Text(widget.chatTitle[0]),
             );
           },
         ),

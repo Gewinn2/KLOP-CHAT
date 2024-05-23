@@ -3,6 +3,7 @@ import 'package:astra/features/chats/chat_panel.dart';
 import 'package:astra/features/chats/struct_people.dart';
 import 'package:astra/repo/repo_post.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class MainChatScreen extends StatefulWidget {
   const MainChatScreen({super.key});
@@ -15,6 +16,7 @@ class MainChatScreen extends StatefulWidget {
 class _MainChatScreen extends State<MainChatScreen> {
 
   List<User> _users = [];
+  List<User> _users_important = [];
   String jwt = "";
   String user_id = "";
 
@@ -27,6 +29,7 @@ class _MainChatScreen extends State<MainChatScreen> {
     _users = help[0] as List<User>;
     jwt = help[1] as String;
     user_id = help[2] as String;
+    _users_important = help[3] as List<User>;
     // user_name =
     //     help["name"] as String?; // Присваивание значения переменной user_name
     // image_url = help["url"] as String?;
@@ -69,7 +72,7 @@ class _MainChatScreen extends State<MainChatScreen> {
   @override
   Widget build(BuildContext context) {
     String chatName;
-    String url;
+    String url='';
     String user_id_str;
     return Scaffold(
       appBar: AppBar(   
@@ -124,33 +127,91 @@ class _MainChatScreen extends State<MainChatScreen> {
           // Список пользователей
           Expanded(
             flex: 3, // Занимает 1/4 пространства
-            child: ListView.builder(
-              itemCount: _users.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: ChatBubble(
-                    chatTitle: _users[index].name, 
-                    imageUrl: 'https://img.freepik.com/free-photo/abstract-textured-backgound_1258-30627.jpg?size=338&ext=jpg&ga=GA1.1.44546679.1716163200&semt=ais_user', 
-                    last_mes: _users[index].content, 
-                  ), //Text(_users[index])
-                  selected: index == _selectedUserIndex,
-                  onTap: () async{
-                    update_id(index);
-                    setState(() {
-                      flag_tab = true;
-                    });
-                    try {
-                          List<Message> help = await getMessage(jwt, _users[index].chat_id);
-                          update(help);
-                          print(message);
-                          
-                    } catch (e) {
-                          // Обработка исключения при отправке запроса
-                        print('Исключение при отправке запроса: $e');
-                    }
-                  },
-                );
-              },
+            child: Column(
+              children: [
+                SizedBox(height: 10,),
+                Text(
+                  'Рекомендованные чаты',
+                  style: TextStyle( 
+                      color: Color.fromRGBO(59, 3, 102, 1),
+                      fontSize: 22,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w700,
+                    ),
+                ),
+                SizedBox(height: 10,),
+                Flexible(
+                  child: ListView.builder(
+                    itemCount: _users_important.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: ChatBubble(
+                          chatTitle: _users_important[index].name, 
+                          imageUrl: url, 
+                          last_mes: _users_important[index].content, 
+                        ), //Text(_users[index])
+                        selected: index == _selectedUserIndex,
+                        onTap: () async{
+                          update_id(index);
+                          setState(() {
+                            flag_tab = true;
+                          });
+                          try {
+                                List<Message> help = await getMessage(jwt, _users[index].chat_id);
+                                update(help);
+                                print(message);
+                                
+                          } catch (e) {
+                                // Обработка исключения при отправке запроса
+                              print('Исключение при отправке запроса: $e');
+                          }
+                        },
+                      );
+                    },
+                  ),
+                ),
+                //SizedBox(height: 10,),
+                const Text(
+                  'Все чаты',
+                  style: TextStyle( 
+                      color: Color.fromRGBO(59, 3, 102, 1),
+                      fontSize: 22,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w700,
+                    ),
+                ),
+                SizedBox(height: 10,),
+                Flexible(
+                  child: ListView.builder(
+                    itemCount: _users.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: ChatBubble(
+                          chatTitle: _users[index].name, 
+                          imageUrl: url, 
+                          last_mes: _users[index].content, 
+                        ), //Text(_users[index])
+                        selected: index == _selectedUserIndex,
+                        onTap: () async{
+                          update_id(index);
+                          setState(() {
+                            flag_tab = true;
+                          });
+                          try {
+                                List<Message> help = await getMessage(jwt, _users[index].chat_id);
+                                update(help);
+                                print(message);
+                                
+                          } catch (e) {
+                                // Обработка исключения при отправке запроса
+                              print('Исключение при отправке запроса: $e');
+                          }
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
           // Разделительная линия
@@ -158,11 +219,11 @@ class _MainChatScreen extends State<MainChatScreen> {
             width: 1, // Ширина линии
             color: Colors.grey, // Цвет линии
           ),
-          // Панель чата
+          flag_tab?// Панель чат
           Expanded(
             flex: 8, // Занимает 3/4 пространства
             child: ChatPanel(user: _users[_selectedUserIndex],jwt: jwt,message: message, flag: flag_tab, user_id_tot_sami: user_id,),
-          ),
+          ):Container(),
         ],
       ),
     );

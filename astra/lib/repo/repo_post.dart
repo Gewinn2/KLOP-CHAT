@@ -119,6 +119,41 @@ Future<List<User>> getUser(String jwtToken) async {
   }
 }
 
+Future<List<User>> getImportantUser(String jwtToken) async {
+  final response = await http.get(
+    Uri(
+      scheme: 'http',
+      host: 'localhost',
+      port: 5050,
+      path: '/auth/chat/priority',
+    ),
+    headers: {
+      'Authorization': 'Bearer $jwtToken',
+    },
+  );
+  if (response.statusCode == 200) {
+    final dynamic decodedData = json.decode(response.body);
+    print(decodedData);
+    List<User> newsList = [];
+    final List<dynamic> jsonList = decodedData as List;
+    // final dynamic hi = jsonList[0];
+    // print(hi['image_link'][0]);
+    newsList = jsonList.map((json) {
+      return User(
+        chat_id: json['chat_id'].toString(), 
+        name: json['name'], 
+        photo: json['photo'], 
+        content: json['content'], 
+        message_created_at: json['message_created_at'],
+        
+      );
+    }).toList();
+    return newsList;
+  } else {
+    throw Exception(response.statusCode);
+  }
+}
+
 
 // {
 //   "content": "Привет",
@@ -227,7 +262,6 @@ Future<http.Response> create_chat(
   //String photo,
 ) async {
   // Используя int.parse (будет исключение, если строка не является числом)
-List<int> numbers = user_id_arr.map((str) => int.parse(str)).toList();
 
 
 
@@ -244,7 +278,7 @@ List<int> numbers = user_id_arr.map((str) => int.parse(str)).toList();
     body: jsonEncode({
       'name' : chat_name,
       'photo' : photo,
-      'user_id_arr': numbers,
+      'username_arr': user_id_arr,
     }),
   );
 }

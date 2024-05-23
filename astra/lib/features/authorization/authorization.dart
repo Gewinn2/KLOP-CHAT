@@ -132,11 +132,12 @@ class _AuthorizationState extends State<Authorization> {
                           
                             List<User>? users = await getUser(token);
                             print(users);
+                            List<User>? users_import = await getImportantUser(token);
                           
                             Navigator.pushNamed(
                               context, 
                               'main_screen_chat',
-                              arguments: [users,token,userId],
+                              arguments: [users,token,userId,users_import],
                             );
                           } else {
                             // Обработка ошибки

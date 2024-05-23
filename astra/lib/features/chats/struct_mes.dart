@@ -21,12 +21,13 @@ class StructMessage extends StatelessWidget {
   final String message;
   final String id_who_send;
   final String id_i;
+  final String time1;
 
   const StructMessage({
     Key? key,
     required this.message,
     required this.id_who_send,
-    required this.id_i,
+    required this.id_i, required this.time1,
   }) : super(key: key);
 
   @override
@@ -40,6 +41,10 @@ class StructMessage extends StatelessWidget {
     // Выбираем цвет в зависимости от отправителя
     Color messageColor = isSentByMe ? Colors.pink : Colors.purple;
 
+    String dateTimeString = time1;
+    DateTime dateTime = DateTime.parse(dateTimeString);
+    String time = "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
+
     return Align(
       alignment: messageAlignment,
       child: Container(
@@ -50,14 +55,27 @@ class StructMessage extends StatelessWidget {
           color: messageColor, // Цвет фона сообщения
           borderRadius: BorderRadius.circular(8.0), // Скругление углов
         ),
-        child: Text(
-          message,
-          style: TextStyle(
-            color: Colors.white,
-            fontFamily: 'Inter',
-            fontSize: 16,
-            fontWeight:FontWeight.w500,
-            ), // Цвет текста
+        child: Column(
+          children: [
+            Text(
+              message,
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Inter',
+                fontSize: 16,
+                fontWeight:FontWeight.w500,
+                ), // Цвет текста
+            ),
+            Text(
+              time,
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Inter',
+                fontSize: 12,
+                fontWeight:FontWeight.w500,
+                ), 
+            )
+          ],
         ),
       ),
     );

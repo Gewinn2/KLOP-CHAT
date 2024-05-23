@@ -46,7 +46,7 @@ class _ChatPanelState extends State<ChatPanel> {
               return CircleAvatar(
                 radius: 6,
                 backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                child: const Text('A'),
+                child: Text(widget.user.name[0]),
               );
             },
           ),
@@ -177,6 +177,7 @@ class _ChatPanelState extends State<ChatPanel> {
                   message: widget.message[index].content,
                   id_who_send: widget.message[index].user_id,
                   id_i: widget.user_id_tot_sami,  // сюда впишу номер чела которого мне вернут при входе в ак( айдишник)
+                  time1: widget.message[index].created_at,
                 );
             },
           ),
