@@ -10,7 +10,7 @@ Future<http.Response> post_sign_in(
     Uri(
       scheme: 'http',
       host: 'localhost',
-      port: 5050,
+      port: 8080,
       path: '/sign-in',
     ),
     headers: {
@@ -40,7 +40,7 @@ Future<http.Response> post_sign_up(
     Uri(
       scheme: 'http',
       host: 'localhost',
-      port: 5050,
+      port: 8080,
       path: '/sign-up',
     ),
     headers: {
@@ -89,7 +89,7 @@ Future<List<User>> getUser(String jwtToken) async {
     Uri(
       scheme: 'http',
       host: 'localhost',
-      port: 5050,
+      port: 8080,
       path: '/auth/chat',
     ),
     headers: {
@@ -180,7 +180,7 @@ Future<http.Response> post_message(
     Uri(
       scheme: 'http',
       host: 'localhost',
-      port: 5050,
+      port: 8080,
       path: '/auth/message',
     ),
     headers: {
@@ -214,7 +214,7 @@ Future<List<Message>> getMessage(String jwtToken,String id) async {
     Uri(
       scheme: 'http',
       host: 'localhost',
-      port: 5050,
+      port: 8080,
       path: '/auth/message',
       queryParameters: {'id': id},
     ),
@@ -269,7 +269,7 @@ Future<http.Response> create_chat(
     Uri(
       scheme: 'http',
       host: 'localhost',
-      port: 5050,
+      port: 8080,
       path: '/auth/chat',
     ),
     headers: {

@@ -107,6 +107,12 @@ func (s *Server) getAllUsersChats(c *gin.Context) {
 		return
 	}
 
+	if AllUsersChats == nil {
+		nilArr := [1]int{0}
+		c.JSON(http.StatusOK, nilArr)
+		return
+	}
+
 	c.JSON(http.StatusOK, AllUsersChats)
 }
 
