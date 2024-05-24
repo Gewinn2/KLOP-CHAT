@@ -60,8 +60,6 @@ func (s *Server) getAllChatsMessages(c *gin.Context) { // получаем со�
 		return
 	}
 
-	// TODO: добавить проверку есть ли пользователь в этом чате
-
 	AllChatsMessages, err := database.GetAllMessages(s.DB, chatId)
 	if err != nil {
 		fmt.Println("getAllChatsMessages:", err)
