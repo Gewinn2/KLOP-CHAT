@@ -102,7 +102,7 @@ func DeleteChatById(db *sql.DB, id int) error {
 // Функция для поиска чатов
 func FindChatByName(db *sql.DB, name string) (GetAllChatByUserIdResult, error) {
 	var chat GetAllChatByUserIdResult
-	rows, err := db.Query(`SELECT * FROM chats WHERE name =  = $1`, name)
+	rows, err := db.Query(`SELECT * FROM chats WHERE name = $1`, name)
 	if err != nil {
 		return chat, fmt.Errorf("DBFindChatByName: %w", err)
 	}
